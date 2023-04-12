@@ -1,0 +1,35 @@
+factors:
+    - name: playerCount
+      desc: playerCount determines the number of Players are in a Game.
+      values:
+        - value: 1
+        - value: 2
+        - value: 3
+        - value: 5
+        - value: 8
+        - value: 13
+    - name: temperature
+      values:
+        - value: 0
+        - value: 0.2
+    - name: llmDemeanor
+      values:
+        - value: kind
+        - value: mean
+        - value: conciliatory
+        - value: agreeable
+        - value: a pushover
+    - name: llmPrompt
+      desc: the prompt given to the LLM
+      values:
+        - value: Talk like a pirate.
+        - value: 'Talk like a hillbilly. '
+        - value: 'Talk in Klingon. '
+        - value: 'You are moving and would like to sell a table that you no longer need.  You posted an advertisement and one possible buyer has contacted you. You are about to meet with this possible buyer to discuss the price.  Important facts:  1. The table is in excellent condition and has already been seen by the buyer.  2. You bought the table new from a local furniture store for $300.  3. The same furniture store offered to buy back the used table for $90.   Try to sell the table for as much money as possible. You do not have to reach an agreement. If you don''t reach an agreement, you will sell the table to the furniture store for $90.   Persona guide: You should be very strategic. Think carefully about the offer made. Begin by asking if the user is interested in buying your table.'
+        - value: 'You and the user must decide on a disciplinary action in a fictitious, controversial case in which a college basketball player bribed an instructor to change his grade on an exam, to maintain his eligibility on the team. You must agree on a choice for the following issues: (1) Student''s Grade; (2) Student Suspension; (3) Student''s Basketball Team; (4) Instructor Punishment;  (5) Instructor Future Position. Each issue has to do with the treatment of the athlete and the instructor. Please make sure to satisfy conflicting interests of the faculty, college administration, and athletic department when making your decisions.'
+    - name: llmPromptRole
+      desc: 'Should the LLM priming be delivered as a system prompt, or a user prompt? See OpenAI docs -- as of gpt-turbo-3.5-0301, it''s recommended to use "user" roles for the primes, and this seems to work from initial testing.  '
+      values:
+        - value: user
+        - value: system
+treatments: []
