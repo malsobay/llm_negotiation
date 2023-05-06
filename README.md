@@ -46,5 +46,3 @@ We should NEVER commit the `.env` files (they're in `.gitignore`)
 
 # To-do: 
 * Clean up the init process when cloning this repo -- there's probably a cleaner way, and if there isn't, we should just have one bash script that does all we need. 
-* Currently an LLM player is always the second player in the game. In future versions both Human and LLM players can potentially be the first to start a negotiation.
-* Separate `llmPrompt` might not be even necessary, and we can reuse the `{first|second}PlayerInstructions` for it.
