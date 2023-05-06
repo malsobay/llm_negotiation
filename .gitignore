@@ -2,4 +2,3 @@
 *node_modules/
 .meteor
 .DS_store
-*Constants*
