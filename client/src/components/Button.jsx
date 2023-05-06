@@ -9,7 +9,7 @@ const sec =
 
 export function Button({
   children,
-  handleClick = null,
+  onClick = null,
   className = "",
   primary = false,
   type = "button",
@@ -18,7 +18,7 @@ export function Button({
   return (
     <button
       type={type}
-      onClick={handleClick}
+      onClick={onClick}
       className={`${base} ${primary ? prim : sec} ${className}`}
       autoFocus={autoFocus}
     >
