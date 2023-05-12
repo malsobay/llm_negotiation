@@ -2,20 +2,54 @@
 import React, { useEffect, useState } from "react";
 import { Chat } from "./components/Chat";
 import { randID } from "./utils";
+import useGameMechanics from "./useGameMechanics";
+
+const getHumanNoDealBehavior = (game, player, players) => {
+  const { firstPlayerNoDeal, secondPlayerNoDeal } = game.get("treatment");
+
+  const isFirst = players[0].id === player.id;
+  const playerNoDeal = isFirst ? firstPlayerNoDeal : secondPlayerNoDeal;
+
+  const allowNoDeal = playerNoDeal !== "not-allowed";
+  const unilateralNoDeal = playerNoDeal === "allowed-unilateral";
+
+  return {
+    allowNoDeal,
+    unilateralNoDeal,
+  };
+};
 
 export function ChatCommon({
   game,
   player,
+  players,
   round,
   stage,
   onNewMessage: onNewMessageImpl,
   onNewNoDeal: onNewNoDealImpl = undefined,
   onNewProposal: onNewProposalImpl = undefined,
-  playerId,
-  otherPlayerId,
+  otherPlayerTyping = false,
 }) {
   const [busy, setBusy] = useState(false);
-  const messages = game.get("messages") || [];
+
+  const {
+    messages,
+    setMessages,
+    switchTurns,
+    playerId,
+    otherPlayerId,
+    endWithDeal,
+    endWithNoDeal,
+    waitingOnOtherPlayer,
+    hasNoDealPending,
+    hasProposalPending,
+  } = useGameMechanics();
+
+  const { allowNoDeal, unilateralNoDeal } = getHumanNoDealBehavior(
+    game,
+    player,
+    players
+  );
 
   const onNewMessage = async (newMessage) => {
     setBusy(true);
@@ -31,12 +65,8 @@ export function ChatCommon({
 
       if (lastMessage.type === "proposal") {
         lastMessage.proposalStatus = "accepted";
-        game.set("messages", [...messages]);
-
-        // We might want to save this data to a stage or a round instead if the game can have multiple rounds
-        game.set("result", "deal-reached");
-        game.set("price", lastMessage.proposal);
-        player.stage.set("submit", true);
+        setMessages([...messages]);
+        endWithDeal(lastMessage.proposal);
       }
     } catch (err) {
       console.error(err);
@@ -54,7 +84,7 @@ export function ChatCommon({
 
       if (lastMessage.type === "proposal") {
         lastMessage.proposalStatus = "rejected";
-        game.set("messages", [...messages]);
+        setMessages([...messages]);
       }
     } catch (err) {
       console.error(err);
@@ -72,11 +102,8 @@ export function ChatCommon({
 
       if (lastMessage.type === "no-deal") {
         lastMessage.noDealStatus = "ended";
-        game.set("messages", [...messages]);
-
-        // We might want to save this data to a stage or a round instead if the game can have multiple rounds
-        game.set("result", "no-deal");
-        player.stage.set("submit", true);
+        setMessages([...messages]);
+        endWithNoDeal();
       }
     } catch (err) {
       console.error(err);
@@ -94,7 +121,7 @@ export function ChatCommon({
 
       if (lastMessage.type === "no-deal") {
         lastMessage.noDealStatus = "continued";
-        game.set("messages", [...messages]);
+        setMessages([...messages]);
       }
     } catch (err) {
       console.error(err);
@@ -108,22 +135,27 @@ export function ChatCommon({
     setBusy(true);
 
     try {
-      game.set("messages", [
-        ...messages,
-        {
-          type: "no-deal",
-          noDealStatus: "pending",
-          playerId,
-          text: "",
-          gamePhase: `Round ${round.index} - ${stage.name}`,
-          id: randID(),
-          timestamp: Date.now(),
-          agentType: "user",
-        },
-      ]);
-      game.set("currentTurnPlayerId", otherPlayerId);
+      /** @type {import("./useGameMechanics").Message} */
+      const newMessage = {
+        type: "no-deal",
+        noDealStatus: "pending",
+        playerId,
+        text: "",
+        gamePhase: `Round ${round.index} - ${stage.name}`,
+        id: randID(),
+        timestamp: Date.now(),
+        agentType: "user",
+      };
 
-      onNewNoDealImpl();
+      setMessages([...messages, newMessage]);
+
+      if (unilateralNoDeal) {
+        endWithDeal();
+      } else {
+        switchTurns();
+      }
+
+      onNewNoDealImpl?.();
     } catch (err) {
       console.error(err);
       return;
@@ -136,22 +168,22 @@ export function ChatCommon({
     setBusy(true);
 
     try {
-      game.set("messages", [
-        ...messages,
-        {
-          type: "proposal",
-          proposal,
-          proposalStatus: "pending",
-          playerId,
-          gamePhase: `Round ${round.index} - ${stage.name}`,
-          id: randID(),
-          timestamp: Date.now(),
-          agentType: "user",
-        },
-      ]);
-      game.set("currentTurnPlayerId", otherPlayerId);
+      /** @type {import("./useGameMechanics").Message} */
+      const newMessage = {
+        type: "proposal",
+        text: "",
+        proposal,
+        proposalStatus: "pending",
+        playerId,
+        gamePhase: `Round ${round.index} - ${stage.name}`,
+        id: randID(),
+        timestamp: Date.now(),
+        agentType: "user",
+      };
+      setMessages([...messages, newMessage]);
+      switchTurns();
 
-      onNewProposalImpl(proposal);
+      onNewProposalImpl?.(proposal);
     } catch (err) {
       console.error(err);
       return;
@@ -160,42 +192,18 @@ export function ChatCommon({
     setBusy(false);
   };
 
-  const hasProposalPending =
-    messages[messages.length - 1]?.proposalStatus === "pending";
-  const hasNoDealPending =
-    messages[messages.length - 1]?.noDealStatus === "pending";
-
-  const hasProposalAccepted =
-    messages[messages.length - 1]?.proposalStatus === "accepted";
-
-  const hasNoDealEnded =
-    messages[messages.length - 1]?.noDealStatus === "ended";
-
-  const chatEnded = hasProposalAccepted || hasNoDealEnded;
-
-  const stageSubmitted = player.stage.get("submit");
-
-  // This will submit the local player stage if the chat has ended by any of the players
-  useEffect(() => {
-    if (!stageSubmitted && chatEnded) {
-      player.stage.set("submit", true);
-    }
-  }, [stageSubmitted, chatEnded]);
-
-  const waitingOnOtherPlayer = game.get("currentTurnPlayerId") !== player.id;
-
   return (
     <div
-      className="overflow-y-auto h-full w-full max-w-screen-lg mx-auto"
-      style={{ maxHeight: "80vh" }}
+      className="overflow-y-auto h-full w-full max-w-screen-lg mx-auto pb-12"
+      style={{ maxHeight: "calc(100vh - 56px)" }}
     >
       <Chat
-        busy={busy || stageSubmitted || waitingOnOtherPlayer}
+        busy={busy || waitingOnOtherPlayer}
         messages={messages}
         playerId={playerId}
         instructions={player.get("instructions")}
         onNewMessage={onNewMessage}
-        onNewNoDeal={onNewNoDeal}
+        onNewNoDeal={allowNoDeal ? onNewNoDeal : undefined}
         onNewProposal={onNewProposal}
         onAccept={
           !waitingOnOtherPlayer && hasProposalPending ? onAccept : undefined
@@ -208,6 +216,8 @@ export function ChatCommon({
           !waitingOnOtherPlayer && hasNoDealPending ? onContinue : undefined
         }
         waitingOnOtherPlayer={waitingOnOtherPlayer}
+        otherPlayerId={otherPlayerId}
+        otherPlayerTyping={otherPlayerTyping}
       />
     </div>
   );

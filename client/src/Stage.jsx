@@ -42,6 +42,7 @@ export function Stage() {
             <ChatWithLLM
               game={game}
               player={player}
+              players={players}
               round={round}
               stage={stage}
             />
