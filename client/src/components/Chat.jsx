@@ -1,7 +1,8 @@
 // @ts-check
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Avatar } from "./Avatar";
 import { Button } from "./Button";
+import { CHAT_RESPONSIVE_COLUMNS } from "../constants";
 
 export function Chat({
   messages,
@@ -12,28 +13,31 @@ export function Chat({
   onNewNoDeal,
   busy,
   waitingOnOtherPlayer,
+  otherPlayerId,
+  otherPlayerTyping,
   onAccept,
   onReject,
   onEnd,
   onContinue,
 }) {
   // Auto-scroll for the chat
-  /**
-   * @type {React.MutableRefObject<HTMLDivElement>}
-   */
+  /** @type {React.MutableRefObject<any[]>} */
   const prevMessages = useRef(messages);
-  /**
-   * @type {React.MutableRefObject<HTMLDivElement>}
-   */
+  /** @type {React.MutableRefObject<boolean>} */
+  const prevOtherPlayerTyping = useRef(otherPlayerTyping);
+  /** @type {React.MutableRefObject<HTMLDivElement>} */
   const messagesContainerRef = useRef();
   useEffect(() => {
-    if (prevMessages.current !== messages) {
+    if (
+      prevMessages.current !== messages ||
+      prevOtherPlayerTyping.current !== otherPlayerTyping
+    ) {
       // @ts-ignore
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
     }
     prevMessages.current = messages;
-  }, [messages]);
+  }, [messages, otherPlayerTyping]);
 
   const [inputMode, setInputMode] = useState("message");
 
@@ -41,12 +45,59 @@ export function Chat({
   const waitingOnNoDeal = !!onEnd || !!onContinue;
 
   return (
-    <div className="w-full h-full px-2 py-2 pointer-events-auto flex flex-col justify-end ">
-      <div className="rounded-2xl outline outline-2 outline-gray-300 pb-2 flex flex-col font-mono bg-white/95 max-h-full">
-        <div className="overflow-auto px-2 pb-2" ref={messagesContainerRef}>
-          <Messages messages={messages} instructions={instructions} />
+    <div
+      className={`grid w-full h-full px-2 py-2 pointer-events-auto ${
+        CHAT_RESPONSIVE_COLUMNS ? "grid-flow-row lg:grid-flow-col" : ""
+      }`}
+      style={{
+        gridAutoColumns: "minmax(0, auto) minmax(50%, 1fr)",
+        gridAutoRows: "minmax(0, auto) minmax(50%, 1fr)",
+      }}
+    >
+      <Instructions instructions={instructions} />
+      <div className="rounded-2xl outline outline-2 outline-gray-300 pb-2 flex-grow flex flex-col justify-end font-mono bg-white/95 max-h-full">
+        <div className="overflow-auto p-2 flex-grow" ref={messagesContainerRef}>
+          <Messages
+            messages={messages}
+            typingPlayerId={otherPlayerTyping ? otherPlayerId : undefined}
+          />
         </div>
         <div className="px-2">
+          {!waitingOnOtherPlayer &&
+            !waitingOnNoDeal &&
+            !waitingOnProposal &&
+            (inputMode === "message" ? (
+              <div className="text-sm pl-12 py-2 text-gray-500">
+                <span>When you're ready </span>
+                <button
+                  className="border border-green-500 text-green-500 px-2 py-1 rounded-md text-xs"
+                  onClick={() => setInputMode("proposal")}
+                >
+                  Propose a deal
+                </button>
+                {messages.length > 0 && onNewNoDeal && (
+                  <>
+                    <span> or </span>
+                    <button
+                      className="border border-red-500 text-red-500 px-2 py-1 rounded-md text-xs"
+                      onClick={onNewNoDeal}
+                    >
+                      End with no deal
+                    </button>
+                  </>
+                )}
+              </div>
+            ) : (
+              <div className="text-sm pl-12 pb-2 text-gray-500">
+                <span>If you've changed your mind </span>
+                <button
+                  className="border border-blue-500 text-blue-500 px-2 py-1 rounded-md text-xs"
+                  onClick={() => setInputMode("message")}
+                >
+                  Keep negotiating
+                </button>
+              </div>
+            ))}
           <div className="w-full flex flex-row items-center rounded-xl pl-2 pr-1 py-1 ring-2 bg-gray-50 ring-gray-200 focus-within:ring-gray-400 space-x-2">
             <div className="w-6 h-6 flex-shrink-0">
               <Avatar playerId={playerId} />
@@ -117,41 +168,6 @@ export function Chat({
               )}
             </div>
           </div>
-          {!waitingOnOtherPlayer &&
-            !waitingOnNoDeal &&
-            !waitingOnProposal &&
-            (inputMode === "message" ? (
-              <div className="text-sm pl-12 pt-2 text-gray-500">
-                <span>When you're ready </span>
-                <button
-                  className="border border-green-500 text-green-500 px-2 py-1 rounded-md text-xs"
-                  onClick={() => setInputMode("proposal")}
-                >
-                  Propose a deal
-                </button>
-                {messages.length > 0 && (
-                  <>
-                    <span> or </span>
-                    <button
-                      className="border border-red-500 text-red-500 px-2 py-1 rounded-md text-xs"
-                      onClick={onNewNoDeal}
-                    >
-                      End with no deal
-                    </button>
-                  </>
-                )}
-              </div>
-            ) : (
-              <div className="text-sm pl-12 pt-2 text-gray-500">
-                <span>If you've changed your mind </span>
-                <button
-                  className="border border-blue-500 text-blue-500 px-2 py-1 rounded-md text-xs"
-                  onClick={() => setInputMode("message")}
-                >
-                  Keep negotiating
-                </button>
-              </div>
-            ))}
         </div>
       </div>
     </div>
@@ -174,6 +190,19 @@ function TextMessage({ message, maxSize }) {
       <div>
         {text}
         {sliced ? <span className="text-gray-400 pl-2">[...]</span> : ""}
+      </div>
+    </div>
+  );
+}
+
+function TypingIndicator({ playerId }) {
+  return (
+    <div className="p-2 flex items-start space-x-2">
+      <div className="w-6 h-6 flex-shrink-0">
+        <Avatar playerId={playerId} />
+      </div>
+      <div>
+        <div className="text-gray-500 text-sm">is typing...</div>
       </div>
     </div>
   );
@@ -233,23 +262,56 @@ function NoDealMessage({ message }) {
   );
 }
 
-function Messages({ messages, maxSize = 0, instructions }) {
+function Instructions({ instructions = "" }) {
+  const [shown, setShown] = useState(true);
+  return (
+    <div className="grid self-start p-4 text-gray-500">
+      <div className="flex items-baseline space-x-2">
+        <h2 className="font-medium">Instructions</h2>
+        {/* Button to hide instructions */}
+        <button
+          className="text-xs text-blue-400"
+          onClick={() => setShown(!shown)}
+        >
+          {shown ? "Hide" : "Show"}
+        </button>
+      </div>
+      {shown && (
+        <p className="overflow-y-auto whitespace-pre-line break-words">
+          {instructions}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function Messages({ messages, maxSize = 0, typingPlayerId }) {
   return (
     <>
-      {instructions && <div className="p-8 text-gray-500">{instructions}</div>}
-      {messages.map((message, i) => (
-        <React.Fragment key={i}>
-          {!!message.text && (
-            <TextMessage message={message} maxSize={maxSize} key={message.id} />
-          )}
-          {message.type === "proposal" && (
-            <ProposalMessage message={message} key={message.id} />
-          )}
-          {message.type === "no-deal" && (
-            <NoDealMessage message={message} key={message.id} />
-          )}
-        </React.Fragment>
-      ))}
+      {messages.length > 0 &&
+        messages.map((message, i) => (
+          <React.Fragment key={i}>
+            {!!message.text && (
+              <TextMessage
+                message={message}
+                maxSize={maxSize}
+                key={message.id}
+              />
+            )}
+            {message.type === "proposal" && (
+              <ProposalMessage message={message} key={message.id} />
+            )}
+            {message.type === "no-deal" && (
+              <NoDealMessage message={message} key={message.id} />
+            )}
+          </React.Fragment>
+        ))}
+      {!!typingPlayerId && <TypingIndicator playerId={typingPlayerId} />}
+      {messages.length === 0 && !typingPlayerId && (
+        <div className="h-full flex items-center justify-center">
+          <p className="p-8 text-gray-500">No messages yet</p>
+        </div>
+      )}
     </>
   );
 }
@@ -266,13 +328,9 @@ function Input({ onNewMessage, onNewProposal, busy, mode }) {
 }
 
 function MessageInput({ onNewMessage, busy }) {
-  /**
-   * @type {React.MutableRefObject<HTMLTextAreaElement>}
-   */
+  /** @type {React.MutableRefObject<HTMLTextAreaElement>} */
   const textAreaRef = useRef();
-  /**
-   * @type {React.MutableRefObject<HTMLFormElement>}
-   */
+  /** @type {React.MutableRefObject<HTMLFormElement>} */
   const formRef = useRef();
 
   const [buttonEnabled, setButtonEnabled] = useState(false);
@@ -318,6 +376,15 @@ function MessageInput({ onNewMessage, busy }) {
   const placeholder = busy ? "Sending your message..." : "Say something...";
 
   const disabled = busy;
+  const prevDisabled = useRef(disabled);
+
+  // Focus the text input area when the input is enabled back
+  useLayoutEffect(() => {
+    if (!disabled && prevDisabled.current) {
+      textAreaRef.current.focus();
+    }
+    prevDisabled.current = disabled;
+  }, [disabled]);
 
   return (
     <form onSubmit={handleSubmit} ref={formRef}>
@@ -350,13 +417,9 @@ function MessageInput({ onNewMessage, busy }) {
 }
 
 function ProposalInput({ onNewProposal, busy }) {
-  /**
-   * @type {React.MutableRefObject<HTMLInputElement>}
-   */
+  /** @type {React.MutableRefObject<HTMLInputElement>} */
   const inputRef = useRef();
-  /**
-   * @type {React.MutableRefObject<HTMLFormElement>}
-   */
+  /** @type {React.MutableRefObject<HTMLFormElement>} */
   const formRef = useRef();
 
   const [buttonEnabled, setButtonEnabled] = useState(false);
