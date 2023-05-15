@@ -291,7 +291,7 @@ function Messages({ messages, maxSize = 0, typingPlayerId }) {
       {messages.length > 0 &&
         messages.map((message, i) => (
           <React.Fragment key={i}>
-            {!!message.text && (
+            {message.type === "message" && (
               <TextMessage
                 message={message}
                 maxSize={maxSize}
