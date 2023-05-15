@@ -176,7 +176,7 @@ export function SubjectiveValueSurvey({ next }) {
               </p>
             </div>
 
-            <div className="space-y-8 mt-6">
+            <div className="space-y-20 mt-6">
               {questions.map(({ question, name, options }) => (
                 <QuestionRadioGroup
                   key={name}
