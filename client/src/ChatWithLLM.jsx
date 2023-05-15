@@ -1,7 +1,11 @@
 // @ts-check
 import React, { useEffect, useRef, useState } from "react";
 import { ChatCommon } from "./ChatCommon";
-import { CHAT_API_PORT, CHAT_SHOW_AI_TYPING_INDICATOR, SIMULATE_AI_RESPONSE_DELAYS } from "./constants";
+import {
+  CHAT_API_PORT,
+  CHAT_SHOW_AI_TYPING_INDICATOR,
+  SIMULATE_AI_RESPONSE_DELAYS,
+} from "./constants";
 import { randID } from "./utils";
 import useGameMechanics from "./useGameMechanics";
 
@@ -208,12 +212,7 @@ export function ChatWithLLM({ game, player, players, stage, round }) {
       const { type, agentType, text } = message;
       return {
         role: agentType,
-        content:
-          type === "proposal"
-            ? `Proposed a deal: $${message.proposal}`
-            : type === "no-deal"
-            ? `Proposed to end without a deal`
-            : text,
+        content: text,
       };
     });
     mappedMessages.unshift({
@@ -265,7 +264,7 @@ export function ChatWithLLM({ game, player, players, stage, round }) {
       },
       body: JSON.stringify({
         messages: openAIMessages,
-        temperature: game.get("treatment").llmTemperature,
+        temperature: game.get("treatment").llmTemperature || 0,
       }),
     });
 
@@ -301,7 +300,7 @@ export function ChatWithLLM({ game, player, players, stage, round }) {
       if (SIMULATE_AI_RESPONSE_DELAYS) {
         // Use a shorter delay for the LLM response as it is already
         // delayed by the API response time
-        await simulateHumanResponseDelay(chatResponse, 0.5);
+        await simulateHumanResponseDelay(chatResponse, 0.3);
       }
 
       if (latestLlmRespondsToMessage.current !== llmRespondsToMessage) {
@@ -331,12 +330,14 @@ export function ChatWithLLM({ game, player, players, stage, round }) {
           type: "proposal",
           proposal: extracted.proposal,
           proposalStatus: "pending",
+          text: `Proposed a deal: $${extracted.proposal}`,
         });
       } else if (extracted.type === "no-deal") {
         messagesWithLLMResponse.push({
           ...messageCommon,
           type: "no-deal",
           noDealStatus: "pending",
+          text: `Proposed to end without a deal`,
         });
       } else if (extracted.type === "deal-accepted") {
         lastMessage.proposalStatus = "accepted";
@@ -378,9 +379,8 @@ export function ChatWithLLM({ game, player, players, stage, round }) {
       }
     } catch (err) {
       // Make sure that the turn is returned to the player if there is an error
-      switchTurns();
+      switchTurns(true);
       console.error(err);
-      return;
     }
 
     setLlmTyping(false);
@@ -416,8 +416,8 @@ export function ChatWithLLM({ game, player, players, stage, round }) {
     void executeLlmTurn(messagesWithUserMessage);
   };
 
-  const onNewProposalOrNoDeal = async () => {
-    await executeLlmTurn(messages);
+  const onNewProposalOrNoDeal = async (newMessages) => {
+    await executeLlmTurn(newMessages);
   };
 
   const isFirstTurn = messages.length === 0;

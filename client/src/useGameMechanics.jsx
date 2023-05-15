@@ -55,11 +55,13 @@ export default function useGameMechanics() {
     [game]
   );
 
-  const switchTurns = useCallback(() => {
-    const nextPlayerId =
-      game.get("currentTurnPlayerId") === playerId ? otherPlayerId : playerId;
-    game.set("currentTurnPlayerId", nextPlayerId);
-  }, [game, playerId, otherPlayerId]);
+  const switchTurns = useCallback(
+    (switchToSelf = false) => {
+      const nextPlayerId = !switchToSelf ? otherPlayerId : playerId;
+      game.set("currentTurnPlayerId", nextPlayerId);
+    },
+    [game, playerId, otherPlayerId]
+  );
 
   const endWithDeal = useCallback(
     (price) => {
@@ -106,8 +108,8 @@ export default function useGameMechanics() {
   );
 
   const waitingOnOtherPlayer =
-    game.get("currentTurnPlayerId") !== player.id &&
-    (pendingActionMessage?.playerId === player.id || !allowOutOfOrder);
+    game.get("currentTurnPlayerId") !== playerId &&
+    (pendingActionMessage?.playerId === playerId || !allowOutOfOrder);
 
   const chatEnded = hasProposalAccepted || hasNoDealEnded;
 

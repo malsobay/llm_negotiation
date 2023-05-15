@@ -42,7 +42,7 @@ const chatApiHandler = async (req, res) => {
     return;
   }
 
-  if (!temperature) {
+  if (temperature == null) {
     res.status(400).send("Missing temperature");
     return;
   }
