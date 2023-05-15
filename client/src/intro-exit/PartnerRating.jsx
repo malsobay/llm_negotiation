@@ -70,7 +70,7 @@ export function PartnerRatingSurvey({ next }) {
               </p>
             </div>
 
-            <div className="space-y-8 mt-6">
+            <div className="space-y-15 mt-6">
               {questions.map(({ question, name, options }) => (
                 <QuestionRadioGroup
                   key={name}
