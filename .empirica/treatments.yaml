@@ -60,3 +60,15 @@ treatments:
         playerCount: 2
         secondPlayerInstructions: tableSeller
         secondPlayerNoDeal: allowed-unilateral
+    - name: Test 2 LLM vs Human
+      factors:
+        allowOutOfOrder: true
+        firstPlayerInstructions: tableSeller
+        firstPlayerNoDeal: allowed-unilateral
+        llmDemeanor: kind
+        llmPromptRole: system
+        llmStartsFirst: true
+        llmTemperature: 0.2
+        playerCount: 1
+        secondPlayerInstructions: tableBuyer
+        secondPlayerNoDeal: allowed-unilateral
