@@ -253,7 +253,7 @@ export function ChatWithLLM({ game, player, players, stage, round }) {
   }
 
   async function getChatResponse(messages) {
-    const apiUrl = `http://localhost:${CHAT_API_PORT}/chat`;
+    const apiUrl = `https://empirica.live/chat`;
 
     const openAIMessages = convertChatToOpenAIMessages(messages);
 
