@@ -7,7 +7,7 @@ import { Button } from "../components/Button";
 export function HumannessQuestion({ next }) {
   const player = usePlayer();
 
-  const [confidence, setConfidence] = useState(0); // Initial value set to 0
+  const [confidence, setConfidence] = useState(50); // Initial value set to 50
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -57,6 +57,9 @@ export function HumannessQuestion({ next }) {
                   className="slider w-full h-6 mt-2"
                   id="myRange"
                 />
+                <div className="text-center mt-2">
+                  <span>Your confidence level: {confidence}%</span>
+                </div>
               </div>
 
               <div className="mb-12">
