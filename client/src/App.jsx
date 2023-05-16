@@ -9,6 +9,7 @@ import { Introduction } from "./intro-exit/Introduction";
 import { Consent } from "./intro-exit/Consent";
 import { Result } from "./intro-exit/Result";
 import { PartnerRatingSurvey } from "./intro-exit/PartnerRating";
+import { HumannessQuestion } from "./intro-exit/HumannessQuestion";
 
 export default function App() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -22,7 +23,7 @@ export default function App() {
   }
 
   function exitSteps({ game, player }) {
-    return [Result, SubjectiveValueSurvey, PartnerRatingSurvey];
+    return [Result, SubjectiveValueSurvey, PartnerRatingSurvey, HumannessQuestion];
   }
 
   return (
