@@ -132,13 +132,22 @@ export function ChatCommon({
   };
 
   const onNewNoDeal = async () => {
+    if (unilateralNoDeal) {
+      const res = window.confirm(
+        `Are you sure you want to walk away without a deal?`
+      );
+      if (!res) {
+        return;
+      }
+    }
+
     setBusy(true);
 
     try {
       /** @type {import("./useGameMechanics").Message} */
       const newMessage = {
         type: "no-deal",
-        noDealStatus: "pending",
+        noDealStatus: unilateralNoDeal ? "unilateral" : "pending",
         playerId,
         text: `Proposed to end without a deal`,
         gamePhase: `Round ${round.index} - ${stage.name}`,
