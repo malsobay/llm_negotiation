@@ -7,7 +7,7 @@ import { Button } from "../components/Button";
 export function HumannessQuestion({ next }) {
   const player = usePlayer();
 
-  const [confidence, setConfidence] = useState(50); // Initial value set to 50
+  const [confidence, setConfidence] = useState(0); // Initial value set to 0
 
   function handleSubmit(event) {
     event.preventDefault();
