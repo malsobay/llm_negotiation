@@ -336,7 +336,7 @@ export function ChatWithLLM({ game, player, players, stage, round }) {
         messagesWithLLMResponse.push({
           ...messageCommon,
           type: "no-deal",
-          noDealStatus: "pending",
+          noDealStatus: unilateralNoDeal ? "unilateral" : "pending",
           text: `Proposed to end without a deal`,
         });
       } else if (extracted.type === "deal-accepted") {

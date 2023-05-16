@@ -9,7 +9,6 @@ import { Loading } from "@empirica/core/player/react";
 import React from "react";
 import { ChatWithHuman } from "./ChatWithHuman";
 import { ChatWithLLM } from "./ChatWithLLM";
-import { Result } from "./Result";
 
 export function Stage() {
   const game = useGame();
@@ -29,10 +28,6 @@ export function Stage() {
       </div>
     );
   }
-
-  const onNext = () => {
-    player.stage.set("submit", true);
-  };
 
   switch (stage.get("name")) {
     case "Negotiation":
@@ -60,8 +55,6 @@ export function Stage() {
         default:
           return <div>Unknown task</div>;
       }
-    case "Result":
-      return <Result next={onNext} game={game} />;
     default:
       break;
   }

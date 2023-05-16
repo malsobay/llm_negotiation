@@ -1,7 +1,10 @@
 import React from "react";
-import { Button } from "./components/Button";
+import { Button } from "../components/Button";
+import { useGame } from "@empirica/core/player/classic/react";
 
-export function Result({ next, game }) {
+export function Result({ next }) {
+  const game = useGame();
+
   const result = game.get("result");
   const price = game.get("price");
 

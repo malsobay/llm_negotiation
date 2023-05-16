@@ -55,7 +55,7 @@ export function PartnerRatingSurvey({ next }) {
   return (
     <div className="mt-3 sm:mt-5 p-20 w-full max-w-screen-md mx-auto">
       <form
-        className="mt-12 space-y-8 divide-y divide-gray-200"
+        className="space-y-8 divide-y divide-gray-200"
         onSubmit={handleSubmit}
       >
         <div className="space-y-8 divide-y divide-gray-200">

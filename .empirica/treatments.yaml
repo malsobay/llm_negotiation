@@ -52,88 +52,17 @@ factors:
         - value: true
         - value: false
 treatments:
-    - name: HumanVsHuman
+    - name: Test Human vs Human
       factors:
+        allowOutOfOrder: true
         firstPlayerInstructions: tableBuyer
-        firstPlayerNoDeal: allowed-mutual
+        firstPlayerNoDeal: allowed-unilateral
         playerCount: 2
         secondPlayerInstructions: tableSeller
-        secondPlayerNoDeal: allowed-mutual
-    - name: HumanVsHuman - Seller first
+        secondPlayerNoDeal: allowed-unilateral
+    - name: Test 2 LLM vs Human
       factors:
-        firstPlayerInstructions: tableSeller
-        firstPlayerNoDeal: allowed-mutual
-        playerCount: 2
-        secondPlayerInstructions: tableBuyer
-        secondPlayerNoDeal: allowed-mutual
-    - name: HumanVsLlm - Human buyer
-      factors:
-        firstPlayerInstructions: tableBuyer
-        firstPlayerNoDeal: allowed-mutual
-        llmDemeanor: kind
-        llmPromptRole: system
-        llmStartsFirst: false
-        llmTemperature: 0.2
-        playerCount: 1
-        secondPlayerInstructions: tableSeller
-        secondPlayerNoDeal: allowed-mutual
-    - name: HumanVsLlm - Human seller
-      factors:
-        firstPlayerInstructions: tableSeller
-        firstPlayerNoDeal: allowed-mutual
-        llmDemeanor: kind
-        llmPromptRole: system
-        llmStartsFirst: false
-        llmTemperature: 0.2
-        playerCount: 1
-        secondPlayerInstructions: tableBuyer
-        secondPlayerNoDeal: allowed-mutual
-    - name: HumanVsLlm - Human seller - LLM cannot say NoDeal
-      factors:
-        firstPlayerInstructions: tableSeller
-        firstPlayerNoDeal: allowed-mutual
-        llmDemeanor: kind
-        llmPromptRole: system
-        llmStartsFirst: false
-        llmTemperature: 0.2
-        playerCount: 1
-        secondPlayerInstructions: tableBuyer
-        secondPlayerNoDeal: not-allowed
-    - name: HumanVsLlm - Human buyer - Human cannot say NoDeal
-      factors:
-        firstPlayerInstructions: tableBuyer
-        firstPlayerNoDeal: not-allowed
-        llmDemeanor: kind
-        llmPromptRole: system
-        llmStartsFirst: false
-        llmTemperature: 0.2
-        playerCount: 1
-        secondPlayerInstructions: tableSeller
-        secondPlayerNoDeal: allowed-mutual
-    - name: LlmVsHuman - Llm buyer
-      factors:
-        firstPlayerInstructions: tableBuyer
-        firstPlayerNoDeal: allowed-mutual
-        llmDemeanor: kind
-        llmPromptRole: system
-        llmStartsFirst: true
-        llmTemperature: 0.2
-        playerCount: 1
-        secondPlayerInstructions: tableSeller
-        secondPlayerNoDeal: allowed-mutual
-    - name: LlmVsHuman - Llm seller
-      factors:
-        firstPlayerInstructions: tableSeller
-        firstPlayerNoDeal: allowed-mutual
-        llmDemeanor: kind
-        llmPromptRole: system
-        llmStartsFirst: true
-        llmTemperature: 0.2
-        playerCount: 1
-        secondPlayerInstructions: tableBuyer
-        secondPlayerNoDeal: allowed-mutual
-    - name: LlmVsHuman - Llm seller - Llm can end game unilaterally
-      factors:
+        allowOutOfOrder: true
         firstPlayerInstructions: tableSeller
         firstPlayerNoDeal: allowed-unilateral
         llmDemeanor: kind
@@ -142,24 +71,4 @@ treatments:
         llmTemperature: 0.2
         playerCount: 1
         secondPlayerInstructions: tableBuyer
-        secondPlayerNoDeal: allowed-mutual
-    - name: HumanVsHuman - OutOfOrder
-      factors:
-        allowOutOfOrder: true
-        firstPlayerInstructions: tableBuyer
-        firstPlayerNoDeal: allowed-mutual
-        playerCount: 2
-        secondPlayerInstructions: tableSeller
-        secondPlayerNoDeal: allowed-mutual
-    - name: LlmVsHuman - Llm buyer - OutOfOrder
-      factors:
-        allowOutOfOrder: true
-        firstPlayerInstructions: tableBuyer
-        firstPlayerNoDeal: allowed-mutual
-        llmDemeanor: kind
-        llmPromptRole: system
-        llmStartsFirst: true
-        llmTemperature: 0.2
-        playerCount: 1
-        secondPlayerInstructions: tableSeller
-        secondPlayerNoDeal: allowed-mutual
+        secondPlayerNoDeal: allowed-unilateral

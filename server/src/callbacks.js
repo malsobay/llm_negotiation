@@ -28,7 +28,6 @@ Empirica.onGameStart(({ game }) => {
     task,
   });
   round.addStage({ name: "Negotiation", duration: 3600 });
-  round.addStage({ name: "Result", duration: 30 });
 
   let currentTurnPlayerId;
 
