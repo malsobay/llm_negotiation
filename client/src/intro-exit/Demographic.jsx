@@ -35,7 +35,7 @@ export function Demographic({ next }) {
 
   return (
     <div className="py-8 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <Alert title="Bonus">
+      {/*<Alert title="Bonus">
         <p>
           Please submit the following code to receive your bonus:{" "}
           <strong>{player.id}</strong>.
@@ -44,7 +44,7 @@ export function Demographic({ next }) {
           Your final <strong>bonus</strong> is in addition of the{" "}
           <strong>1 base reward</strong> for completing the HIT.
         </p>
-      </Alert>
+      </Alert>*/}
 
       <form
         className="mt-12 space-y-8 divide-y divide-gray-200"
