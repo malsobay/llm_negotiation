@@ -62,17 +62,8 @@ factors:
         - value: ai
         - value: human
 treatments:
-    - name: Test Human vs Human
+    - name: Test_Buyer_LLM_Condition
       factors:
-        allowOutOfOrder: true
-        firstPlayerInstructions: tableBuyer
-        firstPlayerNoDeal: allowed-unilateral
-        playerCount: 2
-        secondPlayerInstructions: tableSeller
-        secondPlayerNoDeal: allowed-unilateral
-    - name: Test 2 LLM vs Human
-      factors:
-        allowOutOfOrder: true
         firstPlayerInstructions: tableSeller
         firstPlayerNoDeal: allowed-unilateral
         llmDemeanor: kind
@@ -82,3 +73,4 @@ treatments:
         playerCount: 1
         secondPlayerInstructions: tableBuyer
         secondPlayerNoDeal: allowed-unilateral
+        secondPlayerStatedOpponent: ai
