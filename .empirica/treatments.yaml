@@ -51,6 +51,16 @@ factors:
       values:
         - value: true
         - value: false
+    - name: firstPlayerStatedOpponent
+      desc: Whether the first player is told they are playing against a human or an AI.
+      values:
+        - value: ai
+        - value: human
+    - name: secondPlayerStatedOpponent
+      desc: Whether the second player is told they are playing against a human or an AI.
+      values:
+        - value: ai
+        - value: human
 treatments:
     - name: Test Human vs Human
       factors:

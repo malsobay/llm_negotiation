@@ -5,7 +5,6 @@ import React from "react";
 import "virtual:windi.css";
 import { Game } from "./Game";
 import { SubjectiveValueSurvey } from "./intro-exit/SubjectiveValueSurvey";
-import { Introduction } from "./intro-exit/Introduction";
 import { Consent } from "./intro-exit/Consent";
 import { Result } from "./intro-exit/Result";
 import { PartnerRatingSurvey } from "./intro-exit/PartnerRating";
@@ -19,7 +18,7 @@ export default function App() {
   const url = `${protocol}//${host}/query`;
 
   function introSteps({ game, player }) {
-    return [Introduction];
+    return [];
   }
 
   function exitSteps({ game, player }) {
