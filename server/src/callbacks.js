@@ -8,6 +8,8 @@ Empirica.onGameStart(({ game }) => {
   const {
     firstPlayerInstructions: firstPlayerInstructionsShort,
     secondPlayerInstructions: secondPlayerInstructionsShort,
+    firstPlayerStatedOpponent,
+    secondPlayerStatedOpponent,
     llmStartsFirst,
     playerCount,
   } = treatment;
@@ -27,6 +29,7 @@ Empirica.onGameStart(({ game }) => {
     name: "Round 1",
     task,
   });
+  round.addStage({ name: "Introduction", duration: 120 });
   round.addStage({ name: "Negotiation", duration: 3600 });
 
   let currentTurnPlayerId;
@@ -34,15 +37,21 @@ Empirica.onGameStart(({ game }) => {
   if (multiplayer) {
     game.players[0].set("instructions", firstPlayerInstructions);
     game.players[1].set("instructions", secondPlayerInstructions);
+    game.players[0].set("statedOpponent", firstPlayerStatedOpponent);
+    game.players[1].set("statedOpponent", secondPlayerStatedOpponent);
     currentTurnPlayerId = game.players[0].id;
   } else {
     if (llmStartsFirst) {
       game.players[0].set("llmInstructions", firstPlayerInstructions);
+      game.players[0].set("llmStatedOpponent", firstPlayerStatedOpponent);
       game.players[0].set("instructions", secondPlayerInstructions);
+      game.players[0].set("statedOpponent", secondPlayerStatedOpponent);
       currentTurnPlayerId = `${game.players[0].id}-assistant`;
     } else {
       game.players[0].set("instructions", firstPlayerInstructions);
+      game.players[0].set("statedOpponent", firstPlayerStatedOpponent);
       game.players[0].set("llmInstructions", secondPlayerInstructions);
+      game.players[0].set("llmStatedOpponent", secondPlayerStatedOpponent);
       currentTurnPlayerId = game.players[0].id;
     }
   }

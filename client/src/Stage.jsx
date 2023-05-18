@@ -9,6 +9,7 @@ import { Loading } from "@empirica/core/player/react";
 import React from "react";
 import { ChatWithHuman } from "./ChatWithHuman";
 import { ChatWithLLM } from "./ChatWithLLM";
+import { Introduction } from "./intro-exit/Introduction";
 
 export function Stage() {
   const game = useGame();
@@ -30,6 +31,8 @@ export function Stage() {
   }
 
   switch (stage.get("name")) {
+    case "Introduction":
+      return <Introduction />;
     case "Negotiation":
       switch (round.get("task")) {
         case "llm-vs-human":
