@@ -9,13 +9,17 @@ export function Timer() {
     remaining = Math.round(timer?.remaining / 1000);
   }
 
-  return (
-    <div className="flex flex-col items-center">
-      <h1 className="font-mono text-3xl text-gray-500 font-semibold">
-        {humanTimer(remaining)}
-      </h1>
-    </div>
-  );
+  let color = "bg-gray-50 text-gray-600 ring-gray-500/10";
+  if (remaining <= 10) {
+    color = "bg-red-50 text-red-700 ring-red-600/10";
+  } else if (remaining <= 30) {
+    color = "bg-yellow-50 text-yellow-700 ring-yellow-600/10";
+  }
+
+  const basecn =
+    "tabular-nums inline-flex items-center rounded-md px-2 py-1 text-base font-medium ring-1 ring-inset";
+
+  return <div className={basecn + " " + color}>{humanTimer(remaining)}</div>;
 }
 
 function humanTimer(seconds) {
