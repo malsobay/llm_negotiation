@@ -1,6 +1,6 @@
 // @ts-check
 import React, { useState } from "react";
-import { Chat } from "./components/Chat";
+import { Chat } from "./components/chat/Chat";
 import useGameMechanics from "./useGameMechanics";
 import { randID } from "./utils";
 

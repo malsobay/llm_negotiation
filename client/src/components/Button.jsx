@@ -9,7 +9,7 @@ const variants = {
   secondary:
     "border-gray-300 text-gray-700 bg-white hover:bg-gray-50 focus:ring-gray-500",
   disabled:
-    "border-gray-300 text-gray-700 bg-white opacity-50 cursor-not-allowed",
+    "border-gray-200 text-gray-400 bg-white opacity-50 cursor-not-allowed",
   positive:
     "border-transparent text-white bg-green-600 hover:bg-green-700 focus:ring-green-500",
   negative:
@@ -27,7 +27,9 @@ export function Button({
   disabled = false,
   icon = null,
 }) {
-  const vari = variants[variant] || variants.primary;
+  const vari = disabled
+    ? variants.disabled
+    : variants[variant] || variants.primary;
   const wFull = full ? "w-full flex justify-center" : "";
   const cn = `${base} ${vari} ${wFull} ${className}`;
 

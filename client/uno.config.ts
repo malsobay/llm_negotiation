@@ -1,3 +1,4 @@
+import { presetForms } from "@julr/unocss-preset-forms";
 import {
   defineConfig,
   presetAttributify,
@@ -30,6 +31,7 @@ export default defineConfig({
   },
   presets: [
     presetUno(),
+    presetForms(),
     presetAttributify(),
     presetIcons(),
     presetTypography(),

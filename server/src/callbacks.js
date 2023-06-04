@@ -2,7 +2,8 @@ import { ClassicListenersCollector } from "@empirica/core/admin/classic";
 import instructions from "./instructions";
 export const Empirica = new ClassicListenersCollector();
 
-const dev = true;
+// If true, makes stages last a very long time.
+const dev = false;
 
 Empirica.onGameStart(({ game }) => {
   const treatment = game.get("treatment");
@@ -32,6 +33,7 @@ Empirica.onGameStart(({ game }) => {
     task,
   });
   round.addStage({ name: "Introduction", duration: dev ? 120000 : 120 });
+  round.addStage({ name: "Instructions", duration: dev ? 120000 : 120 });
   round.addStage({ name: "Negotiation", duration: dev ? 360000 : 3600 });
 
   let currentTurnPlayerId;

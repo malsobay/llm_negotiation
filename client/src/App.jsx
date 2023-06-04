@@ -33,7 +33,7 @@ export default function App() {
 
   return (
     <EmpiricaParticipant url={url} ns={playerKey} modeFunc={EmpiricaClassic}>
-      <div className="h-screen relative">
+      <div className="relative h-screen">
         <EmpiricaMenu />
         <div className="h-full overflow-auto">
           <EmpiricaContext
