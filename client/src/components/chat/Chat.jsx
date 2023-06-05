@@ -102,5 +102,5 @@ function getPlaceholder({
     return "Waiting for Opponent...";
   }
 
-  return "Negociate...";
+  return "Negotiate...";
 }
