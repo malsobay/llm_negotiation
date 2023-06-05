@@ -134,7 +134,7 @@ export function Demographic({ next }) {
 
               <div className="grid grid-cols-3 gap-x-6 gap-y-3">
                 <label className={labelClassName}>
-                  How would you describe your strategy in this game?
+                  How would you describe your strategy in this negotiation?
                 </label>
 
                 <label className={labelClassName}>
