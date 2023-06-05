@@ -1,8 +1,8 @@
 // @ts-check
-import React, { useEffect, useState } from "react";
-import { Chat } from "./components/Chat";
-import { randID } from "./utils";
+import React, { useState } from "react";
+import { Chat } from "./components/chat/Chat";
 import useGameMechanics from "./useGameMechanics";
+import { randID } from "./utils";
 
 const getHumanNoDealBehavior = (game, player, players) => {
   const { firstPlayerNoDeal, secondPlayerNoDeal } = game.get("treatment");
@@ -207,32 +207,27 @@ export function ChatCommon({
   };
 
   return (
-    <div
-      className="overflow-y-auto h-full w-full max-w-screen-lg mx-auto pb-12"
-      style={{ maxHeight: "calc(100vh - 56px)" }}
-    >
-      <Chat
-        busy={busy || waitingOnOtherPlayer}
-        messages={messages}
-        playerId={playerId}
-        instructions={player.get("instructions")}
-        onNewMessage={onNewMessage}
-        onNewNoDeal={allowNoDeal ? onNewNoDeal : undefined}
-        onNewProposal={onNewProposal}
-        onAccept={
-          !waitingOnOtherPlayer && hasProposalPending ? onAccept : undefined
-        }
-        onReject={
-          !waitingOnOtherPlayer && hasProposalPending ? onReject : undefined
-        }
-        onEnd={!waitingOnOtherPlayer && hasNoDealPending ? onEnd : undefined}
-        onContinue={
-          !waitingOnOtherPlayer && hasNoDealPending ? onContinue : undefined
-        }
-        waitingOnOtherPlayer={waitingOnOtherPlayer}
-        otherPlayerId={otherPlayerId}
-        otherPlayerTyping={otherPlayerTyping}
-      />
-    </div>
+    <Chat
+      busy={busy || waitingOnOtherPlayer}
+      messages={messages}
+      playerId={playerId}
+      instructions={player.get("instructions")}
+      onNewMessage={onNewMessage}
+      onNewNoDeal={allowNoDeal ? onNewNoDeal : undefined}
+      onNewProposal={onNewProposal}
+      onAccept={
+        !waitingOnOtherPlayer && hasProposalPending ? onAccept : undefined
+      }
+      onReject={
+        !waitingOnOtherPlayer && hasProposalPending ? onReject : undefined
+      }
+      onEnd={!waitingOnOtherPlayer && hasNoDealPending ? onEnd : undefined}
+      onContinue={
+        !waitingOnOtherPlayer && hasNoDealPending ? onContinue : undefined
+      }
+      waitingOnOtherPlayer={waitingOnOtherPlayer}
+      otherPlayerId={otherPlayerId}
+      otherPlayerTyping={otherPlayerTyping}
+    />
   );
 }

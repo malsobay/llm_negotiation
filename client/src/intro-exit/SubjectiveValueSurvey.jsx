@@ -2,8 +2,7 @@
 // @ts-ignore
 import { usePlayer } from "@empirica/core/player/classic/react";
 import React, { useState } from "react";
-import { Button } from "../components/Button";
-import QuestionRadioGroup from "../components/QuestionRadioGroup";
+import { Questions } from "../components/Questions";
 
 const emptyOptions = {
   1: "",
@@ -63,9 +62,9 @@ const questions = [
     name: "sv-q6",
     options: {
       ...emptyOptions,
-      1: "It made me feel _less_ competent",
+      1: "It made me feel **less** competent",
       4: "It did not make me feel more or less competent",
-      7: "It made me feel _more_ competent",
+      7: "It made me feel **more** competent",
     },
   },
   {
@@ -80,9 +79,9 @@ const questions = [
     name: "sv-q8",
     options: {
       ...emptyOptions,
-      1: "It _negatively_ impacted my self-image",
+      1: "It **negatively** impacted my self-image",
       4: "It did not positively or negatively impact my self-image",
-      7: "It _positively_ impacted my self-image",
+      7: "It **positively** impacted my self-image",
     },
   },
   {
@@ -113,9 +112,9 @@ const questions = [
     name: "sv-q13",
     options: {
       ...emptyOptions,
-      1: "Extremely _negative_",
+      1: "Extremely **negative**",
       4: "Neither negative nor positive",
-      7: "Extremely _positive_",
+      7: "Extremely **positive**",
     },
   },
   {
@@ -137,67 +136,29 @@ const questions = [
   },
 ];
 
-const defaultAnswers = questions.reduce((acc, { name }) => {
-  acc[name] = undefined;
-  return acc;
-}, {});
-
 export function SubjectiveValueSurvey({ next }) {
-  const player = usePlayer();
-
-  const [answers, setAnswers] = useState(defaultAnswers);
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    player.set("subjectiveValueSurvey", answers);
-    next();
-  }
-
   return (
-    <div className="mt-3 sm:mt-5 p-20 w-full max-w-screen-md mx-auto">
-      <form
-        className="space-y-8 divide-y divide-gray-200"
-        onSubmit={handleSubmit}
-      >
-        <div className="space-y-8 divide-y divide-gray-200">
-          <div>
-            <div>
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
-                Post negotiation survey
-              </h3>
-              <p className="mt-2 mb-6 text-gray-500">
-                The questions below are about your negotiation with your
-                counterpart. For each question, please select a number from 1-7
-                that most accurately reflects your opinion. You will notice that
-                some of the questions are similar to one another; this is
-                primarily to ensure the validity and reliability of the
-                questionnaire. Please simply answer each question independently,
-                without reference to any of the other questions.
-              </p>
-            </div>
+    <div className="mx-auto mt-3 w-full max-w-screen-md p-20 sm:mt-5">
+      <h3 className="text-lg font-medium leading-6 text-gray-900">
+        Post negotiation survey
+      </h3>
+      <p className="mt-2 text-gray-500">
+        These questions are about your negotiation with your counterpart. For
+        each question, please select a number from 1-7 that most accurately
+        reflects your opinion. You will notice that some of the questions are
+        similar to one another; this is primarily to ensure the validity and
+        reliability of the questionnaire. Please simply answer each question
+        independently, without reference to any of the other questions.
+      </p>
 
-            <div className="space-y-20 mt-6">
-              {questions.map(({ question, name, options }) => (
-                <QuestionRadioGroup
-                  key={name}
-                  question={question}
-                  options={options}
-                  value={answers[name]}
-                  onChange={(e) => {
-                    setAnswers({ ...answers, [name]: e.target.value });
-                  }}
-                  required
-                  withLabelKey
-                />
-              ))}
-
-              <div className="mb-12">
-                <Button type="submit">Submit</Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
+      <div className="mt-12">
+        <Questions
+          playerKey="subjectiveValueSurvey"
+          questions={questions}
+          onDone={next}
+          withLabelKey
+        />
+      </div>
     </div>
   );
 }

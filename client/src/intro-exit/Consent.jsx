@@ -14,12 +14,11 @@ export function Consent({ onConsent }) {
   };
 
   return (
-    <div className="mt-3 sm:mt-5 p-20 w-full max-w-screen-md mx-auto space-y-2">
-      <h3 className="text-lg leading-6 font-medium text-gray-900">
-        Consent form
-      </h3>
-      <div className="mb-6 space-y-2">
-        <p className="text-gray-700">
+    <div className="mt-3 sm:mt-5 p-20 w-full max-w-screen-md mx-auto">
+      <div class="prose prose-bluegray">
+        <h3>Consent form</h3>
+
+        <p>
           I agree to participate in a research study conducted by the
           Massachusetts Institute of Technology. In order to analyze responses
           to the questionnaire, my answers will be recorded. No identifying
@@ -32,14 +31,14 @@ export function Consent({ onConsent }) {
           contact us at fangdav2@gmail.com.
         </p>
       </div>
-      <div className="mb-6 space-y-2">
+      <div className="mt-6">
         <form onSubmit={handleSubmit}>
           <fieldset>
-            <legend className="text-gray-700 mb-2">
+            <legend className="text-gray-700 mb-4">
               Please select one of the following options. If you choose not to
               participate, the survey will end immediately.
             </legend>
-            <div className="text-gray-700 space-y-2 mb-6">
+            <div className="text-gray-700 space-y-2 mb-8">
               <div className="space-x-2">
                 <input
                   type="radio"
@@ -68,7 +67,6 @@ export function Consent({ onConsent }) {
               </Button>
             </div>
           </fieldset>
-          <div></div>
         </form>
       </div>
     </div>

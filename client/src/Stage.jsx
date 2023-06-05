@@ -10,6 +10,7 @@ import React from "react";
 import { ChatWithHuman } from "./ChatWithHuman";
 import { ChatWithLLM } from "./ChatWithLLM";
 import { Introduction } from "./intro-exit/Introduction";
+import { Instructions } from "./intro-exit/Instructions";
 
 export function Stage() {
   const game = useGame();
@@ -24,7 +25,7 @@ export function Stage() {
     }
 
     return (
-      <div className="text-center text-gray-400 pointer-events-none">
+      <div className="pointer-events-none text-center text-gray-400">
         Please wait for other player(s).
       </div>
     );
@@ -33,6 +34,8 @@ export function Stage() {
   switch (stage.get("name")) {
     case "Introduction":
       return <Introduction />;
+    case "Instructions":
+      return <Instructions />;
     case "Negotiation":
       switch (round.get("task")) {
         case "llm-vs-human":

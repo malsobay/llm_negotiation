@@ -1,12 +1,11 @@
 import { usePlayer } from "@empirica/core/player/classic/react";
 import React, { useState } from "react";
-import { Alert } from "../components/Alert";
 import { Button } from "../components/Button";
 
 export function Demographic({ next }) {
   const labelClassName = "block text-sm font-medium text-gray-700 my-2";
   const inputClassName =
-    "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-empirica-500 focus:border-empirica-500 sm:text-sm";
+    "appearance-none block w-full px-3 py-2 accent-teal-500 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm";
   const player = usePlayer();
 
   const [age, setAge] = useState("");
@@ -17,7 +16,7 @@ export function Demographic({ next }) {
   const [education, setEducation] = useState("");
 
   function handleSubmit(event) {
-    event.preventDefault()
+    event.preventDefault();
     player.set("demographicsurvey", {
       age,
       gender,
@@ -34,7 +33,7 @@ export function Demographic({ next }) {
   }
 
   return (
-    <div className="py-8 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
       {/*<Alert title="Bonus">
         <p>
           Please submit the following code to receive your bonus:{" "}
@@ -53,16 +52,16 @@ export function Demographic({ next }) {
         <div className="space-y-8 divide-y divide-gray-200">
           <div>
             <div>
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
+              <h3 className="text-lg font-medium leading-6 text-gray-900">
                 Demographic Survey
               </h3>
               <p className="mt-1 text-sm text-gray-500">
-                Please finish the following short demographic survey. You do not have to
-                provide any information you feel uncomfortable with.
+                Please finish the following short demographic survey. You do not
+                have to provide any information you feel uncomfortable with.
               </p>
             </div>
 
-            <div className="space-y-8 mt-6">
+            <div className="mt-6 space-y-8">
               <div className="flex flex-row">
                 <div>
                   <label htmlFor="email" className={labelClassName}>
@@ -192,7 +191,7 @@ export function Radio({ selected, name, value, label, onChange }) {
   return (
     <label className="text-sm font-medium text-gray-700">
       <input
-        className="mr-2 shadow-sm sm:text-sm"
+        className="mr-2 text-teal-500 shadow-sm sm:text-sm"
         type="radio"
         name={name}
         value={value}

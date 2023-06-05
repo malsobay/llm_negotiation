@@ -1,6 +1,11 @@
+import { usePlayer } from "@empirica/core/player/classic/react";
 import React from "react";
 import { Button } from "../components/Button";
-import { usePlayer } from "@empirica/core/player/classic/react";
+import { Timer } from "../components/Timer";
+
+function Highlight({ children }) {
+  return <span className="rounded bg-yellow-200 px-1">{children}</span>;
+}
 
 export function Introduction() {
   const player = usePlayer();
@@ -13,44 +18,51 @@ export function Introduction() {
   const statedOpponent = player.get("statedOpponent");
 
   return (
-    <div className="mt-3 sm:mt-5 p-20 w-full max-w-screen-lg mx-auto">
-      <h3 className="text-lg leading-6 font-medium text-gray-900">
-        Instructions
-      </h3>
-      <div className="mt-2 mb-6 space-y-4">
-        <p className="text-gray-700">
-          In this task, you will be asked to participate in a negotiation with
-          another party. You will receive a bonus compensation as high as $5
-          based on how well you do on the negotiation (i.e., the price you are
-          able to negotiate the table for) relative to other participants.
+    <div className="h-full w-full justify-center  overflow-auto lg:grid xl:items-center">
+      <div className="lt-lg:bottom-0 absolute w-full text-center lg:top-0">
+        <div className="lt-lg:mb-2 inline-block px-4 py-1 lg:mt-2">
+          <Timer />
+        </div>
+      </div>
+
+      {/* max-w-screen-lg */}
+      <div className="lt-lg:pb-20 prose prose-bluegray w-full max-w-prose p-8 lg:pt-12">
+        <h3 className="mt-0">Introduction</h3>
+
+        <p>
+          In this task, you will be asked to participate in a{" "}
+          <strong>negotiation</strong> with another party. You will receive a{" "}
+          <strong>bonus compensation</strong> as high as $5 based on{" "}
+          <strong>how well you do</strong> on the negotiation (i.e., the price
+          you are able to negotiate the table for) relative to other
+          participants.
         </p>
-        <p className="text-gray-700">
-          Here are the instructions for this negotiation game:
+
+        <p>
+          At any time in the negotiation, you are able to send the other party{" "}
+          <strong>an offer</strong> which they can <strong>accept</strong> or{" "}
+          <strong>reject</strong>, as well as <strong>walk away</strong> from
+          the negotiation (i.e., end the negotiation). The{" "}
+          <strong>same features</strong> are given to the{" "}
+          <strong>other party</strong>. The other party is able to send you
+          offers or walk away from the negotiation at any time.
         </p>
-        <p className="text-gray-700 italic whitespace-pre-line break-words">
-          {instructions}
-        </p>
-        <p className="text-gray-700">
-          Please note that these instructions will always be accessible to you
-          during the negotiation game.
-        </p>
-        <p className="text-gray-700">
-          At any time in the negotiation, you are able to send the other party
-          an offer which they can accept or reject, as well as walk away from
-          the negotiation (i.e., end the negotiation). The same features are
-          given to the other party. The other party is able to send you offers
-          or walk away from the negotiation at any time.
-        </p>
+
         {statedOpponent && (
-          <p className="text-gray-700">
+          <p className="text-bluegray-700 font-medium">
             You have been assigned to negotiate with{" "}
-            {statedOpponent === 'ai' ? "an A.I." : "a human"} negotiator.
+            <Highlight>
+              {statedOpponent === "ai" ? "an A.I." : "a human"} negotiator.
+            </Highlight>
           </p>
         )}
+
+        <div className="lt-lg:w-full pt-4 lg:w-32">
+          <Button onClick={next} autoFocus full>
+            Understood
+          </Button>
+        </div>
       </div>
-      <Button onClick={next} autoFocus>
-        <p>Next</p>
-      </Button>
     </div>
   );
 }

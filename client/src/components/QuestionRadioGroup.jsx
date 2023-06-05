@@ -1,24 +1,9 @@
 // @ts-check
-import React, { useMemo } from "react";
+import React from "react";
+import ReactMarkdown from "react-markdown";
 
-/** @param {{ text: string }} param0 */
-const FormattedLabel = ({ text }) => {
-  const parsed = useMemo(() => {
-    return text.split(/(_\w+_)/);
-  }, [text]);
-
-  return (
-    <>
-      {parsed.map((segment) => {
-        if (segment.startsWith("_") && segment.endsWith("_")) {
-          return <span className="font-bold">{segment.slice(1, -1)}</span>;
-        } else {
-          return segment;
-        }
-      })}
-    </>
-  );
-};
+const btnClass =
+  "border-0.5 flex w-full items-center justify-center rounded border-gray-300 py-1 leading-tight hover:bg-teal-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-gray-100";
 
 const QuestionRadioGroup = ({
   question,
@@ -28,41 +13,50 @@ const QuestionRadioGroup = ({
   required = false,
   withLabelKey = false,
 }) => {
+  const opts = Object.entries(options);
+  const labels = opts.map(([key, label]) => label).filter((v) => v);
+
   return (
     <fieldset>
-      <legend className="text-base font-medium text-gray-900">
-        {question}
+      <legend className="min-h-20 flex items-end text-base font-medium text-gray-900">
+        <div>{question}</div>
       </legend>
-      <div className="mt-4 grid grid-flow-col auto-cols-fr gap-x-4">
-        {Object.entries(options).map(([key, label]) => (
-          <div
+      <div className="mt-4 flex justify-between gap-x-4">
+        {opts.map(([key, label]) => (
+          <button
+            type="button"
             key={key}
-            className="flex flex-col justify-between items-center space-y-2"
+            id={`${question}-${key}`}
+            onClick={() => onChange({ target: { value: key } })}
+            className={`${btnClass} ${
+              key == value
+                ? "bg-teal-500 text-white"
+                : "bg-gray-100 text-gray-700"
+            }`}
           >
-            <label
-              htmlFor={`${question}-${key}`}
-              className="block text-sm text-gray-700 text-center"
-            >
-              {withLabelKey && (
-                <>
-                  ({key})<br />
-                </>
-              )}
-              <FormattedLabel text={label} />
-            </label>
-            <input
-              id={`${question}-${key}`}
-              name={question}
-              value={key}
-              checked={value === key}
-              onChange={onChange}
-              type="radio"
-              className="focus:ring-empirica-500 h-4 w-4 text-empirica-600 border-gray-300"
-              required={required}
-            />
-          </div>
+            {withLabelKey ? key : label}
+          </button>
         ))}
       </div>
+      {withLabelKey && (
+        <div className="min-h-12 mt-4 grid auto-cols-fr grid-flow-col gap-x-4 text-sm text-gray-700">
+          {labels.map((label, i) => (
+            <label
+              key={label}
+              htmlFor={`${question}-${label}`}
+              className={`flex items-start ${
+                i == 0
+                  ? "justify-start"
+                  : i == labels.length - 1
+                  ? "justify-end text-right"
+                  : "justify-center text-center"
+              }`}
+            >
+              <ReactMarkdown>{label}</ReactMarkdown>
+            </label>
+          ))}
+        </div>
+      )}
     </fieldset>
   );
 };

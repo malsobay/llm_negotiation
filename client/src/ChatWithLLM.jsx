@@ -6,8 +6,8 @@ import {
   CHAT_SHOW_AI_TYPING_INDICATOR,
   SIMULATE_AI_RESPONSE_DELAYS,
 } from "./constants";
-import { randID } from "./utils";
 import useGameMechanics from "./useGameMechanics";
+import { randID } from "./utils";
 
 const DEAL_REACHED = "[DEAL REACHED]";
 const NO_DEAL = "[NO DEAL]";
@@ -253,7 +253,8 @@ export function ChatWithLLM({ game, player, players, stage, round }) {
   }
 
   async function getChatResponse(messages) {
-    const apiUrl = `https://empirica.live/chat`;
+    // const apiUrl = `https://empirica.live/chat`;
+    const apiUrl = `http://localhost:${CHAT_API_PORT}/chat`;
 
     const openAIMessages = convertChatToOpenAIMessages(messages);
 

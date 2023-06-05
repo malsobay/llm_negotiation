@@ -2,8 +2,7 @@
 // @ts-ignore
 import { usePlayer } from "@empirica/core/player/classic/react";
 import React, { useState } from "react";
-import { Button } from "../components/Button";
-import QuestionRadioGroup from "../components/QuestionRadioGroup";
+import { Questions } from "../components/Questions";
 
 const defaultOptions = {
   1: "Not at all",
@@ -36,61 +35,24 @@ const questions = [
   },
 ];
 
-const defaultAnswers = questions.reduce((acc, { name }) => {
-  acc[name] = undefined;
-  return acc;
-}, {});
-
 export function PartnerRatingSurvey({ next }) {
-  const player = usePlayer();
-
-  const [answers, setAnswers] = useState(defaultAnswers);
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    player.set("partnerRatingSurvey", answers);
-    next();
-  }
-
   return (
-    <div className="mt-3 sm:mt-5 p-20 w-full max-w-screen-md mx-auto">
-      <form
-        className="space-y-8 divide-y divide-gray-200"
-        onSubmit={handleSubmit}
-      >
-        <div className="space-y-8 divide-y divide-gray-200">
-          <div>
-            <div>
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
-                Partner rating
-              </h3>
-              <p className="mt-2 mb-6 text-gray-500">
-                Recollecting the negotiation you just had, please answer the
-                following questions about your counterpart.
-              </p>
-            </div>
+    <div className="mx-auto mt-3 w-full max-w-screen-md p-20 sm:mt-5">
+      <h3 className="text-lg font-medium leading-6 text-gray-900">
+        Partner rating
+      </h3>
+      <p className="mt-2 text-gray-500">
+        Recollecting the negotiation you just had, please answer the following
+        questions about your counterpart.
+      </p>
 
-            <div className="space-y-15 mt-6">
-              {questions.map(({ question, name, options }) => (
-                <QuestionRadioGroup
-                  key={name}
-                  question={question}
-                  options={options}
-                  value={answers[name]}
-                  onChange={(e) => {
-                    setAnswers({ ...answers, [name]: e.target.value });
-                  }}
-                  required
-                />
-              ))}
-
-              <div className="mb-12">
-                <Button type="submit">Submit</Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
+      <div className="mt-12">
+        <Questions
+          playerKey="partnerRatingSurvey"
+          questions={questions}
+          onDone={next}
+        />
+      </div>
     </div>
   );
 }
