@@ -9,7 +9,7 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 
 /** @typedef {{ allowOutOfOrder: boolean }} Treatment */
 
-/** @typedef {"message" | "deal" | "no-deal" | "proposal"} MessageType */
+/** @typedef {"message" | "no-deal" | "proposal"} MessageType */
 
 /**
  * @typedef {{

@@ -21,10 +21,10 @@ const NO_DEAL_REJECTED = "[NO DEAL REJECTED]";
 /** @param {boolean} allowNoDeal */
 const proposeDealPrompt = (
   allowNoDeal
-) => `When a deal has been reached, output a single line that contains a string ${DEAL_REACHED} and the agreed upon amount, for example "${DEAL_REACHED} $200", if the agreed upon amount is $200.
+) => `When a deal has been reached, output a single line that starts with a string ${DEAL_REACHED}, followed by the agreed upon amount, followed by your response message. For example "${DEAL_REACHED} $193 This works for me, $193 is a fair price", if the agreed upon amount is $193.
 ${
   allowNoDeal
-    ? `If you decide an agreement cannot be met and would rather walk away, output a single line with a string ${NO_DEAL}.
+    ? `If you decide an agreement cannot be met and would rather walk away, output a single line that starts with a string ${NO_DEAL}, followed by your response message. For example "${NO_DEAL} I'm sorry, I don't think we can reach an agreement."
 `
     : ""
 }Do not output any other messages, do not format your response, use ${DEAL_REACHED}${
@@ -36,13 +36,13 @@ If the user wants to continue negotiating, continue negotiating.`;
 const receivedDealReachedPrompt = (
   price
 ) => `The user has proposed a deal of $${price}. If you accept, output a single line with a string ${DEAL_ACCEPTED}.
-If you reject, output a single line that contains a string ${DEAL_REJECTED} followed by your negotiation message".
+If you reject, output a single line that contains a string ${DEAL_REJECTED} followed by your negotiation message. For example "${DEAL_REJECTED} I'm sorry, but this is too much for me."
 Do not output any other messages, do not format your response, use ${DEAL_ACCEPTED} or ${DEAL_REJECTED} verbatim. Your output will be parsed by a computer.
 If you accept the deal, the negotiation ends.
 If you reject the deal, continue negotiating.`;
 
 const receivedNoDealPrompt = `The user has decided to walk away from the negotiation. If you accept, output a single line that contains a string ${NO_DEAL_ACCEPTED}.
-If you reject, output a single line that contains a string ${NO_DEAL_REJECTED} followed by your negotiation message.
+If you reject, output a single line that contains a string ${NO_DEAL_REJECTED} followed by your negotiation message. For example "${NO_DEAL_REJECTED} I think we can still reach an agreement. How about $234?" if your new offer is $234.
 Do not output any other messages, do not format your response, use ${NO_DEAL_ACCEPTED} or ${NO_DEAL_REJECTED} verbatim. Your output will be parsed by a computer.
 If you accept the no deal, the negotiation ends.
 If you reject the no deal, continue negotiating.`;
@@ -91,35 +91,34 @@ const extractMessageProposal = (message) => {
     const messageSplit = message.split(DEAL_REACHED);
     const proposal = messageSplit[1].trim();
 
-    // Sometimes LLM outputs a message before a proposal
-    const messageWithoutProposal = messageSplit[0].trim();
-
     const hasDollarSign = proposal.includes("$");
 
     if (hasDollarSign) {
-      const amount = proposal.split("$")[1].trim();
+      const amountStr = proposal.substring(0, proposal.indexOf(" "));
+      const negotiationMessage = proposal.substring(amountStr.length);
+      const amount = amountStr.replace("$", "");
 
       return {
         type: "proposal",
-        text: messageWithoutProposal,
+        text: negotiationMessage || ``,
         proposal: parseInt(amount),
       };
     } else {
       // Bail out if we have a deal reached but no dollar sign
       return {
         type: "message",
-        text: messageWithoutProposal,
+        text: proposal,
       };
     }
   } else if (hasNoDeal) {
     const messageSplit = message.split(NO_DEAL);
 
-    // Sometimes LLM outputs a text message before a no deal message
-    const messageWithoutNoDeal = messageSplit[0].trim();
+    // LLM outputs a text message after a no deal message
+    const negotiationMessage = messageSplit[1]?.trim();
 
     return {
       type: "no-deal",
-      text: messageWithoutNoDeal,
+      text: negotiationMessage || "",
     };
   } else if (hasDealAccepted) {
     return {
@@ -130,11 +129,11 @@ const extractMessageProposal = (message) => {
     const messageSplit = message.split(DEAL_REJECTED);
 
     // LLM can follow up a deal rejected with a message
-    const messageWithoutDealRejected = messageSplit[1].trim();
+    const negotiationMessage = messageSplit[1]?.trim();
 
     return {
       type: "deal-rejected",
-      text: messageWithoutDealRejected,
+      text: negotiationMessage || "",
     };
   } else if (hasNoDealAccepted) {
     return {
@@ -145,11 +144,11 @@ const extractMessageProposal = (message) => {
     const messageSplit = message.split(NO_DEAL_REJECTED);
 
     // LLM can follow up a no deal rejected with a message
-    const messageWithoutNoDealRejected = messageSplit[1].trim();
+    const negotiationMessage = messageSplit[1]?.trim();
 
     return {
       type: "no-deal-rejected",
-      text: messageWithoutNoDealRejected,
+      text: negotiationMessage || "",
     };
   } else {
     return {
@@ -192,9 +191,27 @@ async function simulateHumanResponseDelay(message, factor = 1) {
   await randomDelay((wordsCnt / 4) * factor, (wordsCnt / 2) * factor);
 }
 
+/**
+ * When a message is a proposal or a no deal, it may not have a text attached to
+ * it, usually when it was sent by the human player. We need to convert it to a
+ * text so that it can be sent to the LLM.
+ *
+ * @param {import("./useGameMechanics").Message} message
+ * @returns {string}
+ */
+const messageTypeToText = (message) => {
+  switch (message.type) {
+    case "proposal":
+      return `Proposed a deal: $${message.proposal}`;
+    case "no-deal":
+      return `Proposed to end without a deal`;
+    default:
+      return message.text;
+  }
+};
+
 export function ChatWithLLM({ game, player, players, stage, round }) {
   const playerId = player.id;
-  const assistantPlayerId = `${player.id}-assistant`;
 
   const { llmPromptRole, llmDemeanor, llmStartsFirst } = game.get("treatment");
   const { allowNoDeal, unilateralNoDeal } = getLlmNoDealBehavior(game);
@@ -212,7 +229,7 @@ export function ChatWithLLM({ game, player, players, stage, round }) {
       const { type, agentType, text } = message;
       return {
         role: agentType,
-        content: text,
+        content: text || messageTypeToText(message),
       };
     });
     mappedMessages.unshift({
@@ -321,6 +338,8 @@ export function ChatWithLLM({ game, player, players, stage, round }) {
       };
 
       const messagesWithLLMResponse = [...messagesWithUserMessage];
+
+      /** @type {import("./useGameMechanics").Message} */
       const lastMessage =
         messagesWithLLMResponse[messagesWithLLMResponse.length - 1];
 
@@ -330,14 +349,12 @@ export function ChatWithLLM({ game, player, players, stage, round }) {
           type: "proposal",
           proposal: extracted.proposal,
           proposalStatus: "pending",
-          text: `Proposed a deal: $${extracted.proposal}`,
         });
       } else if (extracted.type === "no-deal") {
         messagesWithLLMResponse.push({
           ...messageCommon,
           type: "no-deal",
           noDealStatus: unilateralNoDeal ? "unilateral" : "pending",
-          text: `Proposed to end without a deal`,
         });
       } else if (extracted.type === "deal-accepted") {
         lastMessage.proposalStatus = "accepted";
@@ -349,7 +366,7 @@ export function ChatWithLLM({ game, player, players, stage, round }) {
           type: "message",
         });
       } else if (extracted.type === "no-deal-rejected") {
-        lastMessage.noDealStatus = "rejected";
+        lastMessage.noDealStatus = "continued";
 
         messagesWithLLMResponse.push({
           ...messageCommon,

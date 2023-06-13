@@ -174,6 +174,12 @@ export function Chat({
   );
 }
 
+/**
+ * @param {{
+ *   message: import("../useGameMechanics").Message;
+ *   maxSize?: number;
+ * }} param0
+ */
 function TextMessage({ message, maxSize }) {
   let sliced = false;
   let text = message.text;
@@ -212,6 +218,11 @@ function ButtonsContainer({ children }) {
   return <div className="grid grid-flow-col gap-x-2 w-full">{children}</div>;
 }
 
+/**
+ * @param {{
+ *   message: import("../useGameMechanics").Message;
+ * }} param0
+ */
 function ProposalMessage({ message }) {
   return (
     <div className="p-2 flex items-start space-x-2">
@@ -241,6 +252,11 @@ function ProposalMessage({ message }) {
   );
 }
 
+/**
+ * @param {{
+ *   message: import("../useGameMechanics").Message;
+ * }} param0
+ */
 function NoDealMessage({ message }) {
   return (
     <div className="p-2 flex items-start space-x-2">
@@ -285,6 +301,14 @@ function Instructions({ instructions = "" }) {
   );
 }
 
+/**
+ * @param {{
+ *   messages: import("../useGameMechanics").Message[];
+ *   maxSize?: number;
+ *   typingPlayerId?: string;
+ * }} param0
+ * @returns
+ */
 function Messages({ messages, maxSize = 0, typingPlayerId }) {
   return (
     <>
@@ -299,10 +323,28 @@ function Messages({ messages, maxSize = 0, typingPlayerId }) {
               />
             )}
             {message.type === "proposal" && (
-              <ProposalMessage message={message} key={message.id} />
+              <>
+                {message.text && (
+                  <TextMessage
+                    message={message}
+                    maxSize={maxSize}
+                    key={message.id}
+                  />
+                )}
+                <ProposalMessage message={message} key={message.id} />
+              </>
             )}
             {message.type === "no-deal" && (
-              <NoDealMessage message={message} key={message.id} />
+              <>
+                <NoDealMessage message={message} key={message.id} />
+                {message.text && (
+                  <TextMessage
+                    message={message}
+                    maxSize={maxSize}
+                    key={message.id}
+                  />
+                )}
+              </>
             )}
           </React.Fragment>
         ))}
