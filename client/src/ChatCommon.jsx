@@ -1,8 +1,8 @@
 // @ts-check
-import React, { useState } from "react";
-import { Chat } from "./components/chat/Chat";
-import useGameMechanics from "./useGameMechanics";
+import React, { useEffect, useState } from "react";
+import { Chat } from "./components/Chat";
 import { randID } from "./utils";
+import useGameMechanics from "./useGameMechanics";
 
 const getHumanNoDealBehavior = (game, player, players) => {
   const { firstPlayerNoDeal, secondPlayerNoDeal } = game.get("treatment");
@@ -149,7 +149,7 @@ export function ChatCommon({
         type: "no-deal",
         noDealStatus: unilateralNoDeal ? "unilateral" : "pending",
         playerId,
-        text: `Proposed to end without a deal`,
+        text: "",
         gamePhase: `Round ${round.index} - ${stage.name}`,
         id: randID(),
         timestamp: Date.now(),
@@ -182,7 +182,7 @@ export function ChatCommon({
       /** @type {import("./useGameMechanics").Message} */
       const newMessage = {
         type: "proposal",
-        text: `Proposed a deal: $${proposal}`,
+        text: "",
         proposal,
         proposalStatus: "pending",
         playerId,
@@ -207,27 +207,32 @@ export function ChatCommon({
   };
 
   return (
-    <Chat
-      busy={busy || waitingOnOtherPlayer}
-      messages={messages}
-      playerId={playerId}
-      instructions={player.get("instructions")}
-      onNewMessage={onNewMessage}
-      onNewNoDeal={allowNoDeal ? onNewNoDeal : undefined}
-      onNewProposal={onNewProposal}
-      onAccept={
-        !waitingOnOtherPlayer && hasProposalPending ? onAccept : undefined
-      }
-      onReject={
-        !waitingOnOtherPlayer && hasProposalPending ? onReject : undefined
-      }
-      onEnd={!waitingOnOtherPlayer && hasNoDealPending ? onEnd : undefined}
-      onContinue={
-        !waitingOnOtherPlayer && hasNoDealPending ? onContinue : undefined
-      }
-      waitingOnOtherPlayer={waitingOnOtherPlayer}
-      otherPlayerId={otherPlayerId}
-      otherPlayerTyping={otherPlayerTyping}
-    />
+    <div
+      className="overflow-y-auto h-full w-full max-w-screen-lg mx-auto pb-12"
+      style={{ maxHeight: "calc(100vh - 56px)" }}
+    >
+      <Chat
+        busy={busy || waitingOnOtherPlayer}
+        messages={messages}
+        playerId={playerId}
+        instructions={player.get("instructions")}
+        onNewMessage={onNewMessage}
+        onNewNoDeal={allowNoDeal ? onNewNoDeal : undefined}
+        onNewProposal={onNewProposal}
+        onAccept={
+          !waitingOnOtherPlayer && hasProposalPending ? onAccept : undefined
+        }
+        onReject={
+          !waitingOnOtherPlayer && hasProposalPending ? onReject : undefined
+        }
+        onEnd={!waitingOnOtherPlayer && hasNoDealPending ? onEnd : undefined}
+        onContinue={
+          !waitingOnOtherPlayer && hasNoDealPending ? onContinue : undefined
+        }
+        waitingOnOtherPlayer={waitingOnOtherPlayer}
+        otherPlayerId={otherPlayerId}
+        otherPlayerTyping={otherPlayerTyping}
+      />
+    </div>
   );
 }

@@ -56,6 +56,14 @@ export function Messages({
   );
 }
 
+/**
+ * @param {{
+*   messages: import("../useGameMechanics").Message[];
+*   maxSize?: number;
+*   typingPlayerId?: string;
+* }} param0
+* @returns
+*/
 function Message({ message, currentPlayerId, maxSize = 0 }) {
   switch (message.type) {
     case "message":
@@ -115,6 +123,12 @@ function TypingIndicator({ playerId }) {
   );
 }
 
+/**
+ * @param {{
+*   message: import("../useGameMechanics").Message;
+*   maxSize?: number;
+* }} param0
+*/
 function TextMessage({ message, currentPlayerId, maxSize }) {
   let sliced = false;
   let text = message.text;
@@ -131,6 +145,11 @@ function TextMessage({ message, currentPlayerId, maxSize }) {
   );
 }
 
+/**
+ * @param {{
+*   message: import("../useGameMechanics").Message;
+* }} param0
+*/
 export function ProposalMessage({
   message,
   currentPlayerId,
@@ -171,6 +190,11 @@ export function ProposalMessage({
   );
 }
 
+/**
+ * @param {{
+*   message: import("../useGameMechanics").Message;
+* }} param0
+*/
 function NoDealMessage({ message, currentPlayerId }) {
   const unilateral = message.noDealStatus === "unilateral";
   return (
