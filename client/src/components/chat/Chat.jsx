@@ -1,6 +1,5 @@
 // @ts-check
 import React, { useState } from "react";
-import { Modal } from "../Modal";
 import { Timer } from "../Timer";
 import { DealArea } from "./Deals";
 import { InputBox } from "./Input";
@@ -32,7 +31,6 @@ export function Chat({
     waitingOnProposal,
     waitingOnNoDeal,
     waitingOnOtherPlayer,
-    inputMode,
   });
 
   return (
@@ -92,7 +90,6 @@ function getPlaceholder({
   waitingOnProposal,
   waitingOnNoDeal,
   waitingOnOtherPlayer,
-  inputMode,
 }) {
   if (!waitingOnOtherPlayer && waitingOnProposal) {
     return "Deal or no deal?";

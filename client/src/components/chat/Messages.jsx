@@ -3,6 +3,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { useInterval } from "../../utils";
 import { Avatar } from "../Avatar";
 
+/**
+ * @param {{
+ *   messages: import("../../useGameMechanics").Message[];
+ *   currentPlayerId: string;
+ *   maxSize?: number;
+ *   typingPlayerId?: string;
+ * }} param0
+ * @returns
+ */
 export function Messages({
   messages,
   currentPlayerId,
@@ -43,7 +52,11 @@ export function Messages({
       <div className="space-y-2">
         {messages.length > 0 &&
           messages.map((message, i) => (
-            <Message message={message} currentPlayerId={currentPlayerId} />
+            <Message
+              message={message}
+              currentPlayerId={currentPlayerId}
+              maxSize={maxSize}
+            />
           ))}
         {!!typingPlayerId && <TypingIndicator playerId={typingPlayerId} />}
         {messages.length === 0 && !typingPlayerId && (
@@ -72,6 +85,7 @@ function Message({ message, currentPlayerId, maxSize = 0 }) {
       return (
         <ProposalMessage
           message={message}
+          maxSize={maxSize}
           key={message.id}
           currentPlayerId={currentPlayerId}
         />
@@ -81,6 +95,7 @@ function Message({ message, currentPlayerId, maxSize = 0 }) {
       return (
         <NoDealMessage
           message={message}
+          maxSize={maxSize}
           key={message.id}
           currentPlayerId={currentPlayerId}
         />
@@ -115,18 +130,25 @@ function TypingIndicator({ playerId }) {
   );
 }
 
-function TextMessage({ message, currentPlayerId, maxSize }) {
+function SlicedText({ text, maxSize }) {
   let sliced = false;
-  let text = message.text;
-  if (maxSize > 0 && message.text.length > maxSize) {
+  if (maxSize > 0 && text.length > maxSize) {
     text = text.slice(0, maxSize);
     sliced = true;
   }
 
   return (
-    <MessageLine message={message} currentPlayerId={currentPlayerId}>
+    <>
       {text}
       {sliced ? <span>[...]</span> : ""}
+    </>
+  );
+}
+
+function TextMessage({ message, currentPlayerId, maxSize }) {
+  return (
+    <MessageLine message={message} currentPlayerId={currentPlayerId}>
+      <SlicedText text={message.text} maxSize={maxSize} />
     </MessageLine>
   );
 }
@@ -135,9 +157,13 @@ export function ProposalMessage({
   message,
   currentPlayerId,
   hidePending = false,
+  maxSize = 0,
 }) {
   return (
     <MessageLine message={message} currentPlayerId={currentPlayerId}>
+      <div>
+        <SlicedText text={message.text} maxSize={maxSize} />
+      </div>
       <div>
         <span className="italic">Proposed a deal: </span>
         <span className="font-bold">
@@ -171,10 +197,18 @@ export function ProposalMessage({
   );
 }
 
-function NoDealMessage({ message, currentPlayerId }) {
+export function NoDealMessage({
+  message,
+  currentPlayerId,
+  hidePending = false,
+  maxSize = 0,
+}) {
   const unilateral = message.noDealStatus === "unilateral";
   return (
     <MessageLine message={message} currentPlayerId={currentPlayerId}>
+      <div>
+        <SlicedText text={message.text} maxSize={maxSize} />
+      </div>
       <div className="italic">
         {unilateral ? "Ended without a deal" : "Proposed to end without a deal"}
       </div>
@@ -192,7 +226,8 @@ function NoDealMessage({ message, currentPlayerId }) {
             </span>
           )}
 
-          {message.noDealStatus !== "continued" &&
+          {!hidePending &&
+            message.noDealStatus !== "continued" &&
             message.noDealStatus !== "ended" && (
               <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
                 Pending

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Button } from "../Button";
 import { Modal } from "../Modal";
-import { ProposalMessage } from "./Messages";
+import { NoDealMessage, ProposalMessage } from "./Messages";
 import { Divider } from "../Divider";
 
 export function DealArea({
@@ -50,7 +50,11 @@ export function DealArea({
 
       {waitingOnNoDeal && (
         <Modal onClickOut={() => setInputMode("message")}>
-          <ContinueEnd onContinue={onContinue} onEnd={onEnd} />
+          <ContinueEnd
+            onContinue={onContinue}
+            onEnd={onEnd}
+            noDealMessage={messages[messages.length - 1]}
+          />
         </Modal>
       )}
 
@@ -95,17 +99,28 @@ function AcceptReject({ onAccept, onReject, proposalMessage }) {
   );
 }
 
-function ContinueEnd({ onContinue, onEnd }) {
+function ContinueEnd({ noDealMessage, onContinue, onEnd }) {
   return (
     <div className="lg:min-w-96 max-w-prose">
-      <PositiveNegativeButtons
-        positiveText="Keep negotiating"
-        positiveAction={onContinue}
-        positiveDisabled={!onContinue}
-        negativeText="End with no deal"
-        negativeAction={onEnd}
-        negativeDisabled={!onEnd}
-      />
+      <div className="rounded bg-gray-100 p-2">
+        <NoDealMessage
+          message={noDealMessage}
+          // We can just put anything in here, since it's just checking the
+          // message is from self, and in this case, it is not.
+          currentPlayerId={"not self"}
+          hidePending
+        />
+      </div>
+      <div className="mt-4">
+        <PositiveNegativeButtons
+          positiveText="Keep negotiating"
+          positiveAction={onContinue}
+          positiveDisabled={!onContinue}
+          negativeText="End with no deal"
+          negativeAction={onEnd}
+          negativeDisabled={!onEnd}
+        />
+      </div>
     </div>
   );
 }

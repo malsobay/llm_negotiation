@@ -9,20 +9,21 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 
 /** @typedef {{ allowOutOfOrder: boolean }} Treatment */
 
-/** @typedef {"message" | "deal" | "no-deal" | "proposal"} MessageType */
+/** @typedef {"message" | "no-deal" | "proposal"} MessageType */
 
 /**
  * @typedef {{
  *   id: string;
  *   type: MessageType;
  *   text: string;
+ *   originalText?: string;
  *   playerId: string;
  *   gamePhase: string;
  *   timestamp: number;
  *   noDealStatus?: "pending" | "ended" | "continued" | "unilateral";
  *   proposal?: number;
  *   proposalStatus?: "pending" | "rejected" | "accepted";
- *   agentType: "user" | "agent";
+ *   agentType: "user" | "assistant";
  * }} Message
  */
 
