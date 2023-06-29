@@ -9,6 +9,9 @@ import { Result } from "./intro-exit/Result";
 import { PartnerRatingSurvey } from "./intro-exit/PartnerRating";
 import { HumannessQuestion } from "./intro-exit/HumannessQuestion";
 import { Demographic } from "./intro-exit/Demographic";
+import { Introduction } from "./intro-exit/Introduction";
+import { Instructions } from "./intro-exit/Instructions";
+import { testIntro } from "./intro-exit/testintro";
 
 export default function App() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -18,7 +21,7 @@ export default function App() {
   const url = `${protocol}//${host}/query`;
 
   function introSteps({ game, player }) {
-    return [];
+    return [Introduction, Instructions];
   }
 
   function exitSteps({ game, player }) {

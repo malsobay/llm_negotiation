@@ -32,10 +32,6 @@ export function Stage() {
   }
 
   switch (stage.get("name")) {
-    case "Introduction":
-      return <Introduction />;
-    case "Instructions":
-      return <Instructions />;
     case "Negotiation":
       switch (round.get("task")) {
         case "llm-vs-human":

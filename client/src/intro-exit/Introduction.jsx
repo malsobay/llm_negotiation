@@ -7,21 +7,22 @@ function Highlight({ children }) {
   return <span className="rounded bg-yellow-200 px-1">{children}</span>;
 }
 
-export function Introduction() {
+export function Introduction({next}) {
   const player = usePlayer();
 
-  const next = () => {
-    player.stage.set("submit", true);
-  };
+  // const next = () => {
+  //   player.stage.set("submit", true);
+  // };
 
   const instructions = player.get("instructions");
   const statedOpponent = player.get("statedOpponent");
+  
 
   return (
     <div className="h-full w-full justify-center  overflow-auto lg:grid xl:items-center">
       <div className="lt-lg:bottom-0 absolute w-full text-center lg:top-0">
         <div className="lt-lg:mb-2 inline-block px-4 py-1 lg:mt-2">
-          <Timer />
+          {/* <Timer /> */}
         </div>
       </div>
 
