@@ -46,11 +46,12 @@ export function PartnerRatingSurvey({ next }) {
         questions about your counterpart.
       </p>
 
-      <div className="mt-12">
+      <div className="mt-3">
         <Questions
           playerKey="partnerRatingSurvey"
           questions={questions}
           onDone={next}
+          groupSize={4}
         />
       </div>
     </div>

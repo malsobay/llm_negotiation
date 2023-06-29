@@ -157,6 +157,7 @@ export function SubjectiveValueSurvey({ next }) {
           questions={questions}
           onDone={next}
           withLabelKey
+          groupSize={4}
         />
       </div>
     </div>
