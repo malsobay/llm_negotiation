@@ -40,7 +40,9 @@ export function Result({ next }) {
 
       <Divider text="Transcript" />
 
-      <Messages messages={messages} currentPlayerId={player.id} />
+      <div className="max-h-100 overflow-y-scroll">
+        <Messages messages={messages} currentPlayerId={player.id} />
+      </div>
 
       <Divider text="End of Transcript" />
 
