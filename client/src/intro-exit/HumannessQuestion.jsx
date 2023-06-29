@@ -1,11 +1,13 @@
 // @ts-check
 // @ts-ignore
-import { usePlayer } from "@empirica/core/player/classic/react";
+import { usePlayer, useGame} from "@empirica/core/player/classic/react";
 import React, { useState } from "react";
 import { Button } from "../components/Button";
 
 export function HumannessQuestion({ next }) {
   const player = usePlayer();
+  const game = useGame();
+  const statedOpponent = player.get("statedOpponent");;
 
   const [confidence, setConfidence] = useState(0); // Initial value set to 0
 
@@ -25,17 +27,18 @@ export function HumannessQuestion({ next }) {
           <div>
             <div>
               <h3 className="text-lg font-medium leading-6 text-gray-900">
-                Humanness Questionnaire
-              </h3>
+                How confident are you that the other negotiator was {statedOpponent === "ai" ? "an A.I." : "a human"}? 
+              </h3><br/>
               <p className="mb-6 mt-2 text-gray-500">
-                How confident are you that the other negotiator was a human? You
-                will be paid based on how confident you are in the correct
-                answer.
-                <br></br>
-                <br></br>
-                For example, answering "100%" when the negotiator was actually a
-                human earns $0.5, while answering "50%" earns $0.25, and
+                You can earn up to $0.50 more <strong>based on how confident you are in the correct answer.</strong>
+              </p>
+              <p className="mb-6 mt-2 text-gray-500">
+                For example, answering "100%" when the negotiator <strong>was actually {statedOpponent === "ai" ? "an A.I." : "a human"}</strong> earns $0.50, while answering "50%" earns $0.25, and
                 answering "0%" earns no additional bonus.
+              </p>
+              <p className="mb-6 mt-2 text-gray-500">
+              <strong>However,</strong> answering "100%" when the negotiator <strong>was actually {statedOpponent === "ai" ? "a human" : "an A.I."}</strong> earns no additional bonus, while answering "50%" earns $0.25, and
+                answering "0%" earns $0.50.
               </p>
             </div>
 
