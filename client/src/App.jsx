@@ -11,7 +11,6 @@ import { HumannessQuestion } from "./intro-exit/HumannessQuestion";
 import { Demographic } from "./intro-exit/Demographic";
 import { Introduction } from "./intro-exit/Introduction";
 import { Instructions } from "./intro-exit/Instructions";
-import { testIntro } from "./intro-exit/testintro";
 
 export default function App() {
   const urlParams = new URLSearchParams(window.location.search);

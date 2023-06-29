@@ -5,6 +5,8 @@ import { DealArea } from "./Deals";
 import { InputBox } from "./Input";
 import { Instructions } from "./Instructions";
 import { Messages } from "./Messages";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+
 
 export function Chat({
   messages,
@@ -41,8 +43,8 @@ export function Chat({
         </div>
       </div>
 
-      <div className="grid max-h-full grid-rows-[1fr_92px_48px] overflow-hidden">
-        <div className="flex max-w-prose flex-col justify-between gap-y-8 overflow-hidden">
+      <div className="flex grid h-150 grid-rows-[1fr_92px_48px] overflow-hidden gap-x-10">
+        <div className="flex flex-grow max-w-prose flex-col justify-between gap-y-8 overflow-hidden overflow-y-auto">
           <Messages
             messages={messages}
             currentPlayerId={playerId}
@@ -61,7 +63,6 @@ export function Chat({
             }
             placeholder={placeholder}
           />
-        </div>
 
         <DealArea
           waitingOnOtherPlayer={waitingOnOtherPlayer}
@@ -77,9 +78,13 @@ export function Chat({
           onContinue={onContinue}
           onEnd={onEnd}
         />
+        </div>
 
-        <div className="flex justify-center pt-1">
-          <Instructions instructions={instructions} />
+
+        <div className="flex flex-grow max-w-prose flex-col justify-between gap-y-8 overflow-hidden">
+          <div className="prose prose-bluegray max-w-prose rounded-lg bg-gray-50 px-6 py-2 shadow-sm ring-1 ring-gray-900/5">
+            <ReactMarkdown>{instructions}</ReactMarkdown>
+          </div>
         </div>
       </div>
     </div>
