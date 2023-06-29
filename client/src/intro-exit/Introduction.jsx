@@ -58,10 +58,12 @@ export function Introduction({next}) {
           </p>
         )}
 
-        <div className="lt-lg:w-full pt-4 lg:w-32">
-          <Button onClick={next} autoFocus full>
-            Understood
-          </Button>
+        <div className="flex justify-end">
+          <div className="mt-4">
+            <Button onClick={next} autoFocus>
+              Understood
+            </Button>
+          </div>
         </div>
       </div>
     </div>

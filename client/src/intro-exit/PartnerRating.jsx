@@ -14,22 +14,22 @@ const defaultOptions = {
 
 const questions = [
   {
-    question: "How assertive was your COUNTERPART?",
+    question: "How assertive was your counterpart?",
     name: "pr-q1",
     options: defaultOptions,
   },
   {
-    question: "How much empathy did your COUNTERPART convey?",
+    question: "How much empathy did your counterpart convey?",
     name: "pr-q2",
     options: defaultOptions,
   },
   {
-    question: "How warm was your COUNTERPART?",
+    question: "How warm was your counterpart?",
     name: "pr-q3",
     options: defaultOptions,
   },
   {
-    question: "How competent was your COUNTERPART?",
+    question: "How competent was your counterpart?",
     name: "pr-q4",
     options: defaultOptions,
   },

@@ -3,6 +3,8 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import { Button } from "../components/Button";
 import { Timer } from "../components/Timer";
+import { useGame } from "@empirica/core/player/classic/react";
+
 
 function Highlight({ children }) {
   return <span className="rounded bg-yellow-200 px-1">{children}</span>;
@@ -10,7 +12,8 @@ function Highlight({ children }) {
 
 export function Instructions({next}) {
   const player = usePlayer();
-
+  const game = useGame();
+  console.log(game);
   const instructions = player.get("instructions");
   const statedOpponent = player.get("statedOpponent");
 
@@ -41,10 +44,12 @@ export function Instructions({next}) {
           </em>
         </p>
 
-        <div className="lt-lg:w-full pt-4 lg:w-32">
-          <Button onClick={next} autoFocus full>
-            Next
-          </Button>
+        <div className="flex justify-end">
+          <div className="mt-4">
+            <Button onClick={next} autoFocus>
+              Next
+            </Button>
+          </div>
         </div>
       </div>
     </div>

@@ -34,10 +34,14 @@ export function Result({ next }) {
         )}
       </div>
 
-      <Button onClick={next} autoFocus>
-        <p>Next</p>
-      </Button>
-
+      <div className="flex justify-end">
+          <div className="mt-4">
+            <Button onClick={next} autoFocus>
+              Next
+            </Button>
+          </div>
+      </div>
+    
       <Divider text="Transcript" />
 
       <div className="max-h-100 overflow-y-scroll">
@@ -46,10 +50,12 @@ export function Result({ next }) {
 
       <Divider text="End of Transcript" />
 
-      <div className="mt-6">
-        <Button onClick={next} autoFocus>
-          <p>Next</p>
-        </Button>
+      <div className="flex justify-end">
+          <div className="mt-4">
+            <Button onClick={next} autoFocus>
+              Next
+            </Button>
+          </div>
       </div>
     </div>
   );

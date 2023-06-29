@@ -50,16 +50,20 @@ export function Questions({
       ))}
 
       {currentGroup < Math.floor(questions.length / groupSize) - 1 ? (
-        <div className="mt-7">
-          <Button onClick={handleNextGroup} autoFocus>
-          <p>Next</p>
-        </Button>
+        <div className="flex justify-end">
+          <div className="mt-7">
+            <Button onClick={handleNextGroup} autoFocus>
+              Next
+            </Button>
+          </div>
         </div>
       ) : 
-      <div className="mt-7">
-          <Button onClick={onDone} autoFocus>
-        <p>Next</p>
-      </Button>
+        <div className="flex justify-end">
+          <div className="mt-7">
+            <Button onClick={onDone} autoFocus>
+              Next
+            </Button>
+          </div>
         </div>
       }
     </div>
