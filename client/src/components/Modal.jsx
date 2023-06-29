@@ -20,7 +20,7 @@ export const Modal = ({ children, onClickOut, showCloseButton = false }) => {
   return (
     <dialog ref={dialog}>
       <div
-        className="fixed inset-0 left-0 z-50 flex h-screen w-screen items-center justify-center bg-black/60"
+        className="fixed inset-0 left-0 z-50 flex h-screen w-screen items-center justify-end pr-90 bg-black/60"
         id="modal-container"
         onClick={handleOutsideClick}
       >
