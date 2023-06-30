@@ -1,9 +1,9 @@
-import { usePlayer } from "@empirica/core/player/classic/react";
+import { usePlayer, useGame} from "@empirica/core/player/classic/react";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import { Button } from "../components/Button";
 import { Timer } from "../components/Timer";
-import { useGame } from "@empirica/core/player/classic/react";
+
 
 
 function Highlight({ children }) {
@@ -14,6 +14,7 @@ export function Instructions({next}) {
   const player = usePlayer();
   const game = useGame();
   console.log(game);
+  console.log(player);
   const instructions = player.get("instructions");
   const statedOpponent = player.get("statedOpponent");
 
