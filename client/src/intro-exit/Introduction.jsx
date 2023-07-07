@@ -1,7 +1,9 @@
-import { usePlayer } from "@empirica/core/player/classic/react";
+import { usePlayer, useGame } from "@empirica/core/player/classic/react";
 import React from "react";
 import { Button } from "../components/Button";
-import { Timer } from "../components/Timer";
+
+
+
 
 function Highlight({ children }) {
   return <span className="rounded bg-yellow-200 px-1">{children}</span>;
@@ -9,13 +11,20 @@ function Highlight({ children }) {
 
 export function Introduction({next}) {
   const player = usePlayer();
+  const game = useGame();
+  
+  const {
+    firstPlayerInstructions: firstPlayerInstructionsShort,
+    secondPlayerInstructions: secondPlayerInstructionsShort,
+    firstPlayerStatedOpponent,
+    secondPlayerStatedOpponent,
+    llmStartsFirst,
+    playerCount,
+  } = game.get("treatment");
 
-  // const next = () => {
-  //   player.stage.set("submit", true);
-  // };
-
-  const instructions = player.get("instructions");
-  const statedOpponent = player.get("statedOpponent");
+  // const instructions = player.get("instructions");
+  // const statedOpponent = player.get("statedOpponent");
+  
   
 
   return (
@@ -49,11 +58,11 @@ export function Introduction({next}) {
           offers or walk away from the negotiation at any time.
         </p>
 
-        {statedOpponent && (
+        {secondPlayerStatedOpponent && (
           <p className="text-bluegray-700 font-medium">
             You have been assigned to negotiate with{" "}
             <Highlight>
-              {statedOpponent === "ai" ? "an A.I." : "a human"} negotiator.
+              {secondPlayerStatedOpponent === "ai" ? "an A.I." : "a human"} negotiator.
             </Highlight>
           </p>
         )}

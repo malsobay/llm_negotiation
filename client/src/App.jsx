@@ -7,10 +7,12 @@ import { SubjectiveValueSurvey } from "./intro-exit/SubjectiveValueSurvey";
 import { Consent } from "./intro-exit/Consent";
 import { Result } from "./intro-exit/Result";
 import { PartnerRatingSurvey } from "./intro-exit/PartnerRating";
+import { Strategy } from "./intro-exit/Strategy";
 import { HumannessQuestion } from "./intro-exit/HumannessQuestion";
 import { Demographic } from "./intro-exit/Demographic";
 import { Introduction } from "./intro-exit/Introduction";
-import { Instructions } from "./intro-exit/Instructions";
+import { InstructionsTwo } from "./intro-exit/InstructionsTwo";
+import {Lobby} from "./intro-exit/Lobby.jsx"
 
 export default function App() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -20,7 +22,7 @@ export default function App() {
   const url = `${protocol}//${host}/query`;
 
   function introSteps({ game, player }) {
-    return [Introduction, Instructions];
+    return [Introduction, InstructionsTwo];
   }
 
   function exitSteps({ game, player }) {
@@ -28,6 +30,7 @@ export default function App() {
       Result,
       SubjectiveValueSurvey,
       PartnerRatingSurvey,
+      Strategy,
       HumannessQuestion,
       Demographic,
     ];

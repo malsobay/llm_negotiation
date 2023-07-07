@@ -27,7 +27,7 @@ export function HumannessQuestion({ next }) {
           <div>
             <div>
               <h3 className="text-lg font-medium leading-6 text-gray-900">
-                How confident are you that the other negotiator was {statedOpponent === "ai" ? "an A.I." : "a human"}? 
+                You were previously told that the other negotiator was {statedOpponent === "ai" ? "an A.I." : "a human"}. How confident are you that the other negotiator was actually {statedOpponent === "ai" ? "an A.I." : "a human"}? 
               </h3><br/>
               <p className="mb-6 mt-2 text-gray-500">
                 You can earn up to $0.50 more <strong>based on how confident you are in the correct answer.</strong>
@@ -70,8 +70,12 @@ export function HumannessQuestion({ next }) {
                 </div>
               </div>
 
-              <div className="mb-12">
-                <Button type="submit">Submit</Button>
+              <div className="flex justify-end">
+                <div className="mt-7">
+                  <Button type="submit">
+                    Submit
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

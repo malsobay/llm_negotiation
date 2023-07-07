@@ -52,7 +52,7 @@ export function Questions({
       {currentGroup < Math.floor(questions.length / groupSize) - 1 ? (
         <div className="flex justify-end">
           <div className="mt-7">
-            <Button onClick={handleNextGroup} autoFocus>
+            <Button onClick={handleNextGroup}>
               Next
             </Button>
           </div>
@@ -60,7 +60,7 @@ export function Questions({
       ) : 
         <div className="flex justify-end">
           <div className="mt-7">
-            <Button onClick={onDone} autoFocus>
+            <Button onClick={onDone}>
               Next
             </Button>
           </div>

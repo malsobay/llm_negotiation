@@ -13,8 +13,7 @@ function Highlight({ children }) {
 export function Instructions({next}) {
   const player = usePlayer();
   const game = useGame();
-  console.log(game);
-  console.log(player);
+  
   const instructions = player.get("instructions");
   const statedOpponent = player.get("statedOpponent");
 
@@ -22,7 +21,7 @@ export function Instructions({next}) {
     <div className="h-full w-full justify-center  overflow-auto lg:grid xl:items-center">
       <div className="lt-lg:bottom-0 absolute w-full text-center lg:top-0">
         <div className="lt-lg:mb-2 inline-block px-4 py-1 lg:mt-2">
-          {/* <Timer /> */}
+          <Timer />
         </div>
       </div>
 
@@ -45,13 +44,16 @@ export function Instructions({next}) {
           </em>
         </p>
 
-        <div className="flex justify-end">
-          <div className="mt-4">
-            <Button onClick={next} autoFocus>
-              Next
-            </Button>
-          </div>
-        </div>
+        {!player.stage.get("submit") ? 
+          <div className="flex justify-end">
+            <div className="mt-4">
+              <Button onClick={() => player.stage.set("submit", true)} autoFocus>
+                Next
+              </Button>
+            </div>
+          </div> : 
+          <h3 style={{backgroundColor:"#e8e8e8", padding:"2rem", borderRadius:"0.4rem"}}>Please wait for the other participant...</h3>
+        }
       </div>
     </div>
   );

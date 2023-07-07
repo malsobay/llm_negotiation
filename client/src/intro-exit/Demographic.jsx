@@ -10,7 +10,6 @@ export function Demographic({ next }) {
 
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
-  const [strength, setStrength] = useState("");
   const [fair, setFair] = useState("");
   const [feedback, setFeedback] = useState("");
   const [education, setEducation] = useState("");
@@ -20,7 +19,6 @@ export function Demographic({ next }) {
     player.set("demographicsurvey", {
       age,
       gender,
-      strength,
       fair,
       feedback,
       education,
@@ -132,11 +130,7 @@ export function Demographic({ next }) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-x-6 gap-y-3">
-                <label className={labelClassName}>
-                  How would you describe your strategy in this negotiation?
-                </label>
-
+              <div className="grid grid-cols-2 gap-x-6 gap-y-3">
                 <label className={labelClassName}>
                   Do you feel the pay was fair?
                 </label>
@@ -144,16 +138,6 @@ export function Demographic({ next }) {
                 <label className={labelClassName}>
                   Feedback, including problems you encountered.
                 </label>
-
-                <textarea
-                  className={inputClassName}
-                  dir="auto"
-                  id="strength"
-                  name="strength"
-                  rows={4}
-                  value={strength}
-                  onChange={(e) => setStrength(e.target.value)}
-                />
 
                 <textarea
                   className={inputClassName}
@@ -176,8 +160,12 @@ export function Demographic({ next }) {
                 />
               </div>
 
-              <div className="mb-12">
-                <Button type="submit">Submit</Button>
+              <div className="flex justify-end">
+                <div className="mt-7">
+                  <Button type="submit">
+                    Submit
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

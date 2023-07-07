@@ -234,7 +234,9 @@ export function ChatWithLLM({ game, player, players, stage, round }) {
     });
     mappedMessages.unshift({
       role: llmPromptRole,
-      content: `${llmPrompt}. Your demeanor should be ${llmDemeanor}.`,
+      content: `${llmPrompt}. Your demeanor should be ${llmDemeanor}. 
+      Do not expose your private information (such as the price offered by the furniture store) to the counterparty, as they may use this information against you to get a better price for themselves.
+      Do not include "Buyer" or "Assistant" tags in your messages.`,
     });
 
     const lastMessage =

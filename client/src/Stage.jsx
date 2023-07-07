@@ -19,19 +19,21 @@ export function Stage() {
   const round = useRound();
   const stage = useStage();
 
-  if (player.stage.get("submit")) {
-    if (players.length === 1) {
-      return <Loading />;
-    }
+  // if (player.stage.get("submit")) {
+  //   if (players.length === 1) {
+  //     return <Loading />;
+  //   }
 
-    return (
-      <div className="pointer-events-none text-center text-gray-400">
-        Please wait for other player(s).
-      </div>
-    );
-  }
+  //   return (
+  //     <div className="pointer-events-none text-center text-gray-400">
+  //       Please wait for other player(s).
+  //     </div>
+  //   );
+  // }
 
   switch (stage.get("name")) {
+    case "Instructions":
+      return <Instructions />;
     case "Negotiation":
       switch (round.get("task")) {
         case "llm-vs-human":
