@@ -1,10 +1,11 @@
 factors:
     - name: playerCount
-      desc: playerCount determines the number of Players are in a Game. 1 is a chat with an LLM, 2 is a chat with another Player
+      desc: playerCount determines the number of Players are in a Game. playercount= 1 is player vs. LLM, playercount= 2 is player vs. player
       values:
         - value: 1
         - value: 2
     - name: llmTemperature
+      desc: This sets, how much the LLM varies in its dialogue (i.e., the temperature of the LLM)
       values:
         - value: 0
         - value: 0.2
@@ -16,21 +17,22 @@ factors:
         - value: agreeable
         - value: a pushover
     - name: llmStartsFirst
+      desc: Whether the LLM is programmed to speak prior to the human player's initial message
       values:
         - value: true
         - value: false
     - name: llmPromptRole
-      desc: Should the LLM priming be delivered as a system prompt, or a user prompt? See OpenAI docs -- as of gpt-turbo-3.5-0301, it's recommended to use "user" roles for the primes, and this seems to work from initial testing.
+      desc: If the LLM priming will be delivered as a system prompt, or a user prompt. See OpenAI docs -- as of gpt-turbo-3.5-0301, it's recommended to use "user" roles for the primes, and this seems to work from initial testing.
       values:
         - value: user
         - value: system
     - name: firstPlayerInstructions
-      desc: Instructions for the first player.
+      desc: Whether the first player (i.e., the first person programmed to speak, see llmStartsfirst) in the game is programmed to be the buyer or the seller
       values:
         - value: tableBuyer
         - value: tableSeller
     - name: secondPlayerInstructions
-      desc: Instructions for the second player.
+      desc: Whether the second player in the game is programmed to be the buyer or the seller
       values:
         - value: tableBuyer
         - value: tableSeller
@@ -62,15 +64,42 @@ factors:
         - value: ai
         - value: human
 treatments:
-    - name: Test_Buyer_LLM_Condition
+    - name: Player vs. Player Condition
+      desc: This is the condition for Player vs. Player
       factors:
+        allowOutOfOrder: true
+        firstPlayerInstructions: tableBuyer
+        firstPlayerNoDeal: allowed-mutual
+        firstPlayerStatedOpponent: human
+        playerCount: 2
+        secondPlayerInstructions: tableSeller
+        secondPlayerNoDeal: allowed-mutual
+        secondPlayerStatedOpponent: human
+    - name: Player (Buyer) vs. LLM
+      desc: This is the condition where the player is the buyer vs. LLM.
+      factors:
+        allowOutOfOrder: true
         firstPlayerInstructions: tableSeller
-        firstPlayerNoDeal: allowed-unilateral
-        llmDemeanor: kind
+        firstPlayerNoDeal: allowed-mutual
+        firstPlayerStatedOpponent: ai
         llmPromptRole: system
         llmStartsFirst: true
         llmTemperature: 0.2
         playerCount: 1
         secondPlayerInstructions: tableBuyer
-        secondPlayerNoDeal: allowed-unilateral
+        secondPlayerNoDeal: allowed-mutual
+        secondPlayerStatedOpponent: ai
+    - name: Player (Seller) vs. LLM
+      desc: This is the condition where the player is the seller vs. LLM.
+      factors:
+        allowOutOfOrder: true
+        firstPlayerInstructions: tableBuyer
+        firstPlayerNoDeal: allowed-mutual
+        firstPlayerStatedOpponent: ai
+        llmPromptRole: system
+        llmStartsFirst: true
+        llmTemperature: 0.2
+        playerCount: 1
+        secondPlayerInstructions: tableSeller
+        secondPlayerNoDeal: allowed-mutual
         secondPlayerStatedOpponent: ai
